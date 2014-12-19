@@ -46,8 +46,7 @@ public class GameRenderer {
     private Circle[][] circlesArray;
 
 	// Game Assets
-	private TextureRegion bg, grass, birdMid, skullUp, skullDown, bar,barflip,
-			zbLogo, scoreboard, star, noStar,circleMap;
+	private TextureRegion[] circleMap = new TextureRegion[4];
 	private Animation birdAnimation;
 
 	// Tween stuff
@@ -91,23 +90,10 @@ public class GameRenderer {
 	}
 
 	private void initAssets() {
-		bg = AssetLoader.bg;
-		grass = AssetLoader.grass;
-		birdAnimation = AssetLoader.birdAnimation;
-		birdMid = AssetLoader.bird;
-        circleMap = AssetLoader.circle;
-		skullUp = AssetLoader.skullUp;
-		skullDown = AssetLoader.skullDown;
-		bar = AssetLoader.bar;
-		barflip = AssetLoader.barflip;
-		//ready = AssetLoader.ready;
-		zbLogo = AssetLoader.zbLogo;
-		//gameOver = AssetLoader.gameOver;
-		//highScore = AssetLoader.highScore;
-		scoreboard = AssetLoader.scoreboard;
-		//retry = AssetLoader.retry;
-		star = AssetLoader.star;
-		noStar = AssetLoader.noStar;
+        circleMap[0] = AssetLoader.circle0;
+        circleMap[1] = AssetLoader.circle1;
+        circleMap[2] = AssetLoader.circle2;
+        circleMap[3] = AssetLoader.circle3;
 	}
 
     public void render(float delta, float runTime) {
@@ -156,7 +142,7 @@ public class GameRenderer {
         circlesArray = circleController.getCiclesArray();
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
-                batcher.draw(circleMap,
+                batcher.draw(circleMap[circlesArray[i][j].getValue()],
                         circlesArray[i][j].getActualPosition().x ,
                         circlesArray[i][j].getActualPosition().y,
                         circlesArray[i][j].getCircleDia()/2, circlesArray[i][j].getCircleDia()/2,

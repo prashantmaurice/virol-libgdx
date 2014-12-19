@@ -117,4 +117,5 @@ idea {
 dependencies {
     compile files('/Users/maurice/Documents/repos/maurice/virol-libgdx/core/src/com/maurice/virolLibgdx/libs/tween-engine-api-6.3.3/tween-engine-api.jar')
     compile files('/Users/maurice/Documents/repos/maurice/virol-libgdx/core/src/com/maurice/virolLibgdx/libs/tween-engine-api-6.3.3/tween-engine-api-sources.jar')
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
 }

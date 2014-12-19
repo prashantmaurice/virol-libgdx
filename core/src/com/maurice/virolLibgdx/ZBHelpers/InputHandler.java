@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.ui.SimpleButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InputHandler implements InputProcessor {
@@ -27,12 +26,12 @@ public class InputHandler implements InputProcessor {
 		this.scaleFactorX = scaleFactorX;
 		this.scaleFactorY = scaleFactorY;
 
-		menuButtons = new ArrayList<SimpleButton>();
-		playButton = new SimpleButton(
-				136 / 2 - (AssetLoader.playButtonUp.getRegionWidth() / 2),
-				midPointY + 50, 29, 16, AssetLoader.playButtonUp,
-				AssetLoader.playButtonDown);
-		menuButtons.add(playButton);
+//		menuButtons = new ArrayList<SimpleButton>();
+//		playButton = new SimpleButton(
+//				136 / 2 - (AssetLoader.playButtonUp.getRegionWidth() / 2),
+//				midPointY + 50, 29, 16, AssetLoader.playButtonUp,
+//				AssetLoader.playButtonDown);
+//		menuButtons.add(playButton);
 	}
 
 	@Override

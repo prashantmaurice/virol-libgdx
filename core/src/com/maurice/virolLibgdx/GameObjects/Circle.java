@@ -19,6 +19,7 @@ public class Circle {
 
     private int circleDia;
 	private float rotation;
+    private int value;
 
 
 	private com.badlogic.gdx.math.Circle boundingCircle;
@@ -34,12 +35,13 @@ public class Circle {
         circleDia = Math.min(dimX,dimY);
         actualPosition = new Vector2(x*dimX, y*dimY);
 		boundingCircle = new com.badlogic.gdx.math.Circle();
+        value=0;
 	}
 
 	public void update(float delta) {
 
 		// Rotate counterclockwise
-        rotation -= 300 * delta;
+        rotation -= 100 * delta*value;
 
 	}
 
@@ -48,6 +50,7 @@ public class Circle {
 
 	public void onClick() {
         Gdx.app.log("CIRCLE", "Clicked circle:"+gridPosition.x+"=="+gridPosition.y);
+        if(value<3)value++;
 	}
 
 	public void die() {
@@ -82,5 +85,9 @@ public class Circle {
             }
         }
         return false;
+    }
+
+    public int getValue() {
+        return value;
     }
 }
