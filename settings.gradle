@@ -1,1 +1,1 @@
-include 'android', 'core'
+include 'android', 'core','core:libs:tween-engine-api-6.3.3'
