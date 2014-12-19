@@ -25,13 +25,16 @@ public class CircleController {
 	public CircleController(int x, int y) {
 		this.ROWS = x;
 		this.COLUMNS = y;
+
+	}
+    public void createBoard(int boardX,int boardY){
         ciclesArray = new Circle[GameWorld.ROWS][GameWorld.COLUMNS];
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
-                ciclesArray[i][j] = new Circle(i,j);
+                ciclesArray[i][j] = new Circle(i,j,boardX/ROWS,boardY/COLUMNS);
             }
         }
-	}
+    }
 
 	public void update(float delta) {
 
@@ -81,5 +84,14 @@ public class CircleController {
 	}
 
 
-
+    public void onclick(int screenX, int screenY) {
+        for(int i=0;i<GameWorld.ROWS;i++){
+            for(int j=0;j<GameWorld.COLUMNS;j++){
+                if(ciclesArray[i][j].contains(screenX,screenY)){
+                    ciclesArray[i][j].onClick();
+                    return;
+                };
+            }
+        }
+    }
 }

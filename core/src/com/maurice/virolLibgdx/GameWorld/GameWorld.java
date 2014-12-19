@@ -1,5 +1,6 @@
 package com.maurice.virolLibgdx.GameWorld;
 
+import com.badlogic.gdx.math.Vector2;
 import com.maurice.virolLibgdx.GameObjects.CircleController;
 
 public class GameWorld {
@@ -16,8 +17,13 @@ public class GameWorld {
 	private GameState currentState;
     public static int ROWS = 4;
     public static int COLUMNS = 6;
+    private int CIRCLE_DIAMETER;
 
-	public enum GameState {
+    public void setDimensions(Vector2 gameDimensions) {
+        CIRCLE_DIAMETER = (int)(((gameDimensions.x/ROWS)<(gameDimensions.y/COLUMNS))?(gameDimensions.x/ROWS):(gameDimensions.y/COLUMNS));
+    }
+
+    public enum GameState {
 		MENU, READY, RUNNING, GAMEOVER, HIGHSCORE
 	}
 
@@ -30,7 +36,9 @@ public class GameWorld {
 //		scroller = new ScrollHandler(this, midPointY + 66);
 //		ground = new Rectangle(0, midPointY + 56, 137, 11);
 	}
-
+    public void createBoard(int boardX,int boardY){
+        circleController.createBoard(boardX,boardY);
+    }
 	public void update(float delta) {
 		runTime += delta;
 

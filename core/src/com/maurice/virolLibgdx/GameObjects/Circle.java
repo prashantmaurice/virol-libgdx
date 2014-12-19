@@ -5,22 +5,34 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Circle {
 
-    public Vector2 getPosition() {
-        return position;
+    public Vector2 getGridPosition() {
+        return gridPosition;
     }
 
-    private Vector2 position;
+    private Vector2 gridPosition;
+    private Vector2 actualPosition;
+    private Vector2 tileDim;
+
+    public int getCircleDia() {
+        return circleDia;
+    }
+
+    private int circleDia;
 	private float rotation;
-	private float width;
-	private float height;
 
 
 	private com.badlogic.gdx.math.Circle boundingCircle;
 
-	public Circle(float x, float y) {
-//		this.width = width;
-//		this.height = height;
-		position = new Vector2(x, y);
+
+    public Vector2 getActualPosition() {
+        return actualPosition;
+    }
+
+    public Circle(int x, int y, int dimX,int dimY) {
+		gridPosition = new Vector2(x, y);
+        tileDim = new Vector2(dimX, dimY);
+        circleDia = Math.min(dimX,dimY);
+        actualPosition = new Vector2(x*dimX, y*dimY);
 		boundingCircle = new com.badlogic.gdx.math.Circle();
 	}
 
@@ -32,11 +44,10 @@ public class Circle {
 	}
 
 	public void updateReady(float runTime) {
-//		position.y = 2 * (float) Math.sin(7 * runTime) + originalY;
 	}
 
 	public void onClick() {
-        Gdx.app.log("CIRCLE", "Clicked");
+        Gdx.app.log("CIRCLE", "Clicked circle:"+gridPosition.x+"=="+gridPosition.y);
 	}
 
 	public void die() {
@@ -44,29 +55,32 @@ public class Circle {
 
 	public void onRestart(int y) {
 		rotation = 0;
-		position.y = y;
+		gridPosition.y = y;
 	}
 
 	public float getX() {
-		return position.x;
+		return gridPosition.x;
 	}
 
 	public float getY() {
-		return position.y;
+		return gridPosition.y;
 	}
 
-	public float getWidth() {
-		return width;
-	}
-
-	public float getHeight() {
-		return height;
-	}
 
 	public float getRotation() {
 		return rotation;
 	}
+    public Vector2 getTileDim() {
+        return tileDim;
+    }
 
 
-
+    public boolean contains(int screenX, int screenY) {
+        if((screenX>actualPosition.x)&(screenX<actualPosition.x+tileDim.x)){
+            if((screenY>actualPosition.y)&(screenY<actualPosition.y+tileDim.y)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -46,6 +46,7 @@ public class InputHandler implements InputProcessor {
 		} else if (myWorld.isReady()) {
 			myWorld.start();
 		} else if (myWorld.isRunning()) {
+            myWorld.getCircleController().onclick(screenX,screenY);
 		}
 
 		if (myWorld.isGameOver() || myWorld.isHighScore()) {

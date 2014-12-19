@@ -28,13 +28,14 @@ import aurelienribon.tweenengine.TweenManager;
 public class GameRenderer {
 
 	private GameWorld myWorld;
+    private static GameRenderer instance;
 	private OrthographicCamera cam;
 	private ShapeRenderer shapeRenderer;
 
 
     //DIMENSIONS
     private Vector2 gameDimensions;
-    private int CIRCLE_DIAMETER;
+
 
 	private SpriteBatch batcher;
 
@@ -60,7 +61,9 @@ public class GameRenderer {
 	public GameRenderer(GameWorld world, int gameHeight, int gameWidth, int midPointY) {
 		myWorld = world;
         gameDimensions = new Vector2(gameWidth, gameHeight);
-        CIRCLE_DIAMETER = ((gameWidth/myWorld.ROWS)<(gameHeight/myWorld.COLUMNS))?(gameWidth/myWorld.ROWS):(gameHeight/myWorld.COLUMNS);
+        myWorld.createBoard((int)gameDimensions.x,(int)gameDimensions.y);
+
+        myWorld.setDimensions(gameDimensions);
 		this.midPointY = midPointY;
 		this.menuButtons = ((InputHandler) Gdx.input.getInputProcessor())
 				.getMenuButtons();
@@ -79,6 +82,9 @@ public class GameRenderer {
 		transitionColor = new Color();
 		prepareTransition(255, 255, 255, .5f);
 	}
+    public static GameRenderer getInstance(){
+        return instance;
+    }
 
 	private void initGameObjects() {
         circleController = myWorld.getCircleController();
@@ -104,15 +110,58 @@ public class GameRenderer {
 		noStar = AssetLoader.noStar;
 	}
 
+    public void render(float delta, float runTime) {
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        shapeRenderer.begin(ShapeType.Filled);
+
+        // Draw Background color
+        shapeRenderer.setColor(10 / 255.0f, 40 / 255.0f, 51 / 255.0f, 1);
+        shapeRenderer.rect(0, 0, gameDimensions.x, gameDimensions.y);
+
+        shapeRenderer.end();
+
+        batcher.begin();
+        batcher.disableBlending();
+
+//        enable this to set background
+//        batcher.draw(bg, 0, midPointY + 23, 136, 43);
+
+
+        batcher.enableBlending();
+        //drawSkulls();
+
+        if (myWorld.isRunning()) {
+            drawCircles(runTime);
+        } else if (myWorld.isReady()) {
+            drawReady();
+        } else if (myWorld.isMenu()) {
+        } else if (myWorld.isGameOver()) {
+            drawGameOver();
+            drawRetry();
+        } else if (myWorld.isHighScore()) {
+            drawHighScore();
+            drawRetry();
+        }
+
+
+        batcher.end();
+        drawTransition(delta);
+
+    }
+
     private void drawCircles(float runTime){
         circlesArray = circleController.getCiclesArray();
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
                 batcher.draw(circleMap,
-                        CIRCLE_DIAMETER*circlesArray[i][j].getPosition().x ,
-                        CIRCLE_DIAMETER*circlesArray[i][j].getPosition().y,
-                        CIRCLE_DIAMETER/2, CIRCLE_DIAMETER/2,
-                        CIRCLE_DIAMETER, CIRCLE_DIAMETER, 1, 1, circlesArray[i][j].getRotation());
+                        circlesArray[i][j].getActualPosition().x ,
+                        circlesArray[i][j].getActualPosition().y,
+                        circlesArray[i][j].getCircleDia()/2, circlesArray[i][j].getCircleDia()/2,
+                        circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                        1, 1, circlesArray[i][j].getRotation());
             }
         }
 
@@ -149,46 +198,7 @@ public class GameRenderer {
 		//batcher.draw(highScore, 22, midPointY - 50, 96, 14);
 	}
 
-	public void render(float delta, float runTime) {
 
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		shapeRenderer.begin(ShapeType.Filled);
-
-		// Draw Background color
-		shapeRenderer.setColor(174 / 255.0f, 216 / 255.0f, 255 / 255.0f, 1);
-		shapeRenderer.rect(0, 0, 136, midPointY + 66);
-
-		shapeRenderer.end();
-
-		batcher.begin();
-		batcher.disableBlending();
-
-		batcher.draw(bg, 0, midPointY + 23, 136, 43);
-
-
-		batcher.enableBlending();
-		//drawSkulls();
-
-		if (myWorld.isRunning()) {
-            drawCircles(runTime);
-		} else if (myWorld.isReady()) {
-			drawReady();
-		} else if (myWorld.isMenu()) {
-		} else if (myWorld.isGameOver()) {
-			drawGameOver();
-			drawRetry();
-		} else if (myWorld.isHighScore()) {
-			drawHighScore();
-			drawRetry();
-		}
-
-
-		batcher.end();
-		drawTransition(delta);
-
-	}
 
 	public void prepareTransition(int r, int g, int b, float duration) {
 		transitionColor.set(r / 255.0f, g / 255.0f, b / 255.0f, 1);
