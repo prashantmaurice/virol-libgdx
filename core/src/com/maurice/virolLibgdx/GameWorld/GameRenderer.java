@@ -9,10 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.maurice.virolLibgdx.GameObjects.Bird;
-import com.maurice.virolLibgdx.GameObjects.Grass;
-import com.maurice.virolLibgdx.GameObjects.Pipe;
-import com.maurice.virolLibgdx.GameObjects.ScrollHandler;
+import com.badlogic.gdx.math.Vector2;
+import com.maurice.virolLibgdx.GameObjects.Circle;
+import com.maurice.virolLibgdx.GameObjects.CircleController;
 import com.maurice.virolLibgdx.TweenAccessors.Value;
 import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
@@ -32,19 +31,22 @@ public class GameRenderer {
 	private OrthographicCamera cam;
 	private ShapeRenderer shapeRenderer;
 
+
+    //DIMENSIONS
+    private Vector2 gameDimensions;
+    private int CIRCLE_DIAMETER;
+
 	private SpriteBatch batcher;
 
 	private int midPointY;
 
 	// Game Objects
-	private Bird bird;
-	private ScrollHandler scroller;
-	private Grass frontGrass, backGrass;
-	private Pipe pipe1, pipe2, pipe3;
+	private CircleController circleController;
+    private Circle[][] circlesArray;
 
 	// Game Assets
 	private TextureRegion bg, grass, birdMid, skullUp, skullDown, bar,barflip,
-			zbLogo, scoreboard, star, noStar;
+			zbLogo, scoreboard, star, noStar,circleMap;
 	private Animation birdAnimation;
 
 	// Tween stuff
@@ -55,15 +57,16 @@ public class GameRenderer {
 	private List<SimpleButton> menuButtons;
 	private Color transitionColor;
 
-	public GameRenderer(GameWorld world, int gameHeight, int midPointY) {
+	public GameRenderer(GameWorld world, int gameHeight, int gameWidth, int midPointY) {
 		myWorld = world;
-
+        gameDimensions = new Vector2(gameWidth, gameHeight);
+        CIRCLE_DIAMETER = ((gameWidth/myWorld.ROWS)<(gameHeight/myWorld.COLUMNS))?(gameWidth/myWorld.ROWS):(gameHeight/myWorld.COLUMNS);
 		this.midPointY = midPointY;
 		this.menuButtons = ((InputHandler) Gdx.input.getInputProcessor())
 				.getMenuButtons();
 
 		cam = new OrthographicCamera();
-		cam.setToOrtho(true, 136, gameHeight);
+		cam.setToOrtho(true, gameDimensions.x, gameHeight);
 
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
@@ -78,13 +81,7 @@ public class GameRenderer {
 	}
 
 	private void initGameObjects() {
-		bird = myWorld.getBird();
-		scroller = myWorld.getScroller();
-		frontGrass = scroller.getFrontGrass();
-		backGrass = scroller.getBackGrass();
-		pipe1 = scroller.getPipe1();
-		pipe2 = scroller.getPipe2();
-		pipe3 = scroller.getPipe3();
+        circleController = myWorld.getCircleController();
 	}
 
 	private void initAssets() {
@@ -92,6 +89,7 @@ public class GameRenderer {
 		grass = AssetLoader.grass;
 		birdAnimation = AssetLoader.birdAnimation;
 		birdMid = AssetLoader.bird;
+        circleMap = AssetLoader.circle;
 		skullUp = AssetLoader.skullUp;
 		skullDown = AssetLoader.skullDown;
 		bar = AssetLoader.bar;
@@ -106,126 +104,19 @@ public class GameRenderer {
 		noStar = AssetLoader.noStar;
 	}
 
-	private void drawGrass() {
-		// Draw the grass
-		batcher.draw(grass, frontGrass.getX(), frontGrass.getY(),
-				frontGrass.getWidth(), frontGrass.getHeight());
-		batcher.draw(grass, backGrass.getX(), backGrass.getY(),
-				backGrass.getWidth(), backGrass.getHeight());
-	}
+    private void drawCircles(float runTime){
+        circlesArray = circleController.getCiclesArray();
+        for(int i=0;i<GameWorld.ROWS;i++){
+            for(int j=0;j<GameWorld.COLUMNS;j++){
+                batcher.draw(circleMap,
+                        CIRCLE_DIAMETER*circlesArray[i][j].getPosition().x ,
+                        CIRCLE_DIAMETER*circlesArray[i][j].getPosition().y,
+                        CIRCLE_DIAMETER/2, CIRCLE_DIAMETER/2,
+                        CIRCLE_DIAMETER, CIRCLE_DIAMETER, 1, 1, circlesArray[i][j].getRotation());
+            }
+        }
 
-	private void drawSkulls() {
-
-		batcher.draw(skullUp, pipe1.getX() - 1,
-				pipe1.getY() + pipe1.getHeight() - 14, 24, 14);
-		batcher.draw(skullDown, pipe1.getX() - 1,
-				pipe1.getY() + pipe1.getHeight() + 45, 24, 14);
-
-		batcher.draw(skullUp, pipe2.getX() - 1,
-				pipe2.getY() + pipe2.getHeight() - 14, 24, 14);
-		batcher.draw(skullDown, pipe2.getX() - 1,
-				pipe2.getY() + pipe2.getHeight() + 45, 24, 14);
-
-		batcher.draw(skullUp, pipe3.getX() - 1,
-				pipe3.getY() + pipe3.getHeight() - 14, 24, 14);
-		batcher.draw(skullDown, pipe3.getX() - 1,
-				pipe3.getY() + pipe3.getHeight() + 45, 24, 14);
-	}
-
-	private void drawPipes() {
-		batcher.draw(barflip, pipe1.getX(), pipe1.getY(), pipe1.getWidth(),
-				pipe1.getHeight());
-		batcher.draw(bar, pipe1.getX(), pipe1.getY() + pipe1.getHeight() + Pipe.VERTICAL_GAP,
-				pipe1.getWidth(), midPointY + 66 - (pipe1.getHeight() +  Pipe.VERTICAL_GAP));
-				
-
-		batcher.draw(barflip, pipe2.getX(), pipe2.getY(), pipe2.getWidth(),
-				pipe2.getHeight());
-		batcher.draw(bar, pipe2.getX(), pipe2.getY() + pipe2.getHeight() +  Pipe.VERTICAL_GAP,
-				pipe2.getWidth(), midPointY + 66 - (pipe2.getHeight() +  Pipe.VERTICAL_GAP));
-
-		batcher.draw(barflip, pipe3.getX(), pipe3.getY(), pipe3.getWidth(),
-				pipe3.getHeight());
-		batcher.draw(bar, pipe3.getX(), pipe3.getY() + pipe3.getHeight() +  Pipe.VERTICAL_GAP,
-				pipe3.getWidth(), midPointY + 66 - (pipe3.getHeight() +  Pipe.VERTICAL_GAP));
-	}
-
-	private void drawBirdCentered(float runTime) {
-		batcher.draw(birdAnimation.getKeyFrame(runTime), 59, bird.getY() - 15,
-				bird.getWidth() / 2.0f, bird.getHeight() / 2.0f,
-				bird.getWidth(), bird.getHeight(), 1, 1, bird.getRotation());
-	}
-
-	private void drawBird(float runTime) {
-
-		if (bird.shouldntFlap()) {
-			batcher.draw(birdMid, bird.getX(), bird.getY()+4,
-					bird.getWidth() / 2.0f, bird.getHeight() / 2.0f,
-					bird.getWidth(), bird.getHeight(), 1, 1, bird.getRotation());
-
-		} else {
-			batcher.draw(birdAnimation.getKeyFrame(runTime), bird.getX(),
-					bird.getY(), bird.getWidth() / 2.0f,
-					bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(),
-					1, 1, bird.getRotation());
-		}
-
-	}
-
-	private void drawMenuUI() {
-		batcher.draw(zbLogo, 136 / 2 - (zbLogo.getRegionWidth()*0.5f / 2.6f), midPointY - 70,
-				zbLogo.getRegionWidth() / 2.6f, zbLogo.getRegionHeight()/ 2.6f);
-		
-		//for (SimpleButton button : menuButtons) {
-			//button.draw(batcher);
-		//}
-		
-		AssetLoader.font.setScale(0.06f, -0.06f);
-		AssetLoader.font.draw(batcher, "TAP TO START",
-				34, midPointY + 90);
-
-	}
-
-	private void drawScoreboard() {
-		batcher.draw(scoreboard, 136/2-55, midPointY - 60, 110, 67);
-		
-		int starPosY = 22;
-		batcher.draw(noStar, 25, midPointY - starPosY, 10, 10);
-		batcher.draw(noStar, 37, midPointY - starPosY, 10, 10);
-		batcher.draw(noStar, 49, midPointY - starPosY, 10, 10);
-		batcher.draw(noStar, 61, midPointY - starPosY, 10, 10);
-		batcher.draw(noStar, 73, midPointY - starPosY, 10, 10);
-
-		if (myWorld.getScore() > 2) {
-			batcher.draw(star, 25, midPointY - starPosY, 10, 10);
-		}
-
-		if (myWorld.getScore() > 17) {
-			batcher.draw(star, 37, midPointY - starPosY, 10, 10);
-		}
-
-		if (myWorld.getScore() > 50) {
-			batcher.draw(star, 49, midPointY - starPosY, 10, 10);
-		}
-
-		if (myWorld.getScore() > 80) {
-			batcher.draw(star, 61, midPointY - starPosY, 10, 10);
-		}
-
-		if (myWorld.getScore() > 120) {
-			batcher.draw(star, 73, midPointY - starPosY, 10, 10);
-		}
-
-		int length = ("" + myWorld.getScore()).length();
-
-		AssetLoader.whiteFont.draw(batcher, "" + myWorld.getScore(),
-				107 - (2 * length), midPointY - 30);
-
-		int length2 = ("" + AssetLoader.getHighScore()).length();
-		AssetLoader.whiteFont.draw(batcher, "" + AssetLoader.getHighScore(),
-				107 - (2.5f * length2), midPointY - 8);
-
-	}
+    }
 
 	private void drawRetry() {
 		//batcher.draw(retry, 136/2-28, midPointY + 10, 56, 14);
@@ -269,14 +160,6 @@ public class GameRenderer {
 		shapeRenderer.setColor(174 / 255.0f, 216 / 255.0f, 255 / 255.0f, 1);
 		shapeRenderer.rect(0, 0, 136, midPointY + 66);
 
-		// Draw Grass
-		shapeRenderer.setColor(6 / 255.0f, 23 / 255.0f, 31 / 255.0f, 1);
-		shapeRenderer.rect(0, midPointY + 70, 136, 11);
-
-		// Draw Dirt
-		shapeRenderer.setColor(6 / 255.0f, 23 / 255.0f, 31 / 255.0f, 1);
-		shapeRenderer.rect(0, midPointY + 77, 136, 52);
-
 		shapeRenderer.end();
 
 		batcher.begin();
@@ -284,33 +167,23 @@ public class GameRenderer {
 
 		batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
-		drawPipes();
 
 		batcher.enableBlending();
 		//drawSkulls();
 
 		if (myWorld.isRunning()) {
-			drawBird(runTime);
-			drawScore();
+            drawCircles(runTime);
 		} else if (myWorld.isReady()) {
-			drawBird(runTime);
 			drawReady();
 		} else if (myWorld.isMenu()) {
-			drawBirdCentered(runTime);
-			drawMenuUI();
 		} else if (myWorld.isGameOver()) {
-			drawScoreboard();
-			drawBird(runTime);
 			drawGameOver();
 			drawRetry();
 		} else if (myWorld.isHighScore()) {
-			drawScoreboard();
-			drawBird(runTime);
 			drawHighScore();
 			drawRetry();
 		}
 
-		drawGrass();
 
 		batcher.end();
 		drawTransition(delta);
@@ -340,5 +213,9 @@ public class GameRenderer {
 
 		}
 	}
+
+    public Vector2 getGameDimensions() {
+        return gameDimensions;
+    }
 
 }

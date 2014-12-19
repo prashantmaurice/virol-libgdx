@@ -2,7 +2,6 @@ package com.maurice.virolLibgdx.ZBHelpers;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.maurice.virolLibgdx.GameObjects.Bird;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.ui.SimpleButton;
 
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InputHandler implements InputProcessor {
-	private Bird myBird;
 	private GameWorld myWorld;
 
 	private List<SimpleButton> menuButtons;
@@ -23,7 +21,6 @@ public class InputHandler implements InputProcessor {
 	public InputHandler(GameWorld myWorld, float scaleFactorX,
 			float scaleFactorY) {
 		this.myWorld = myWorld;
-		myBird = myWorld.getBird();
 
 		int midPointY = myWorld.getMidPointY();
 
@@ -48,9 +45,7 @@ public class InputHandler implements InputProcessor {
 			myWorld.ready();
 		} else if (myWorld.isReady()) {
 			myWorld.start();
-			myBird.onClick();
 		} else if (myWorld.isRunning()) {
-			myBird.onClick();
 		}
 
 		if (myWorld.isGameOver() || myWorld.isHighScore()) {
@@ -87,7 +82,6 @@ public class InputHandler implements InputProcessor {
 				myWorld.start();
 			}
 
-			myBird.onClick();
 
 			if (myWorld.isGameOver() || myWorld.isHighScore()) {
 				myWorld.restart();

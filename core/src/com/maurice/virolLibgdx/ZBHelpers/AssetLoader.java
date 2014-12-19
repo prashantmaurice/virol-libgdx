@@ -11,10 +11,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetLoader {
 
-	public static Texture texture, texture2,texture4,texture5, logoTexture;
+	public static Texture texture, texture2,texture4,texture5, logoTexture,circleTexture;
 	public static TextureRegion logo, zbLogo, bg, grass, bird, birdDown,
 			birdUp, skullUp, skullDown, bar,barflip, playButtonUp, playButtonDown,
-			ready, gameOver, highScore, scoreboard, star, noStar, retry;
+			ready, gameOver, highScore, scoreboard, star, noStar, retry,circle;
 	public static Animation birdAnimation;
 	public static Sound dead, flap, coin, fall;
 	public static BitmapFont font, shadow, whiteFont;
@@ -26,6 +26,11 @@ public class AssetLoader {
 		logoTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		logo = new TextureRegion(logoTexture, 0, 0, 512, 114);
+
+        //FOR CIRCLES
+        circleTexture = new Texture(Gdx.files.internal("data/circles/circle.png"));
+        circle = new TextureRegion(circleTexture, 0, 0, 96, 96);
+        circle.flip(false, true);
 
 		texture = new Texture(Gdx.files.internal("data/texture3.png"));
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);

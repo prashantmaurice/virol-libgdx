@@ -1,22 +1,21 @@
 package com.maurice.virolLibgdx.GameWorld;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
-import com.maurice.virolLibgdx.GameObjects.Bird;
-import com.maurice.virolLibgdx.GameObjects.ScrollHandler;
-import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
+import com.maurice.virolLibgdx.GameObjects.CircleController;
 
 public class GameWorld {
 
-	private Bird bird;
-	private ScrollHandler scroller;
-	private Rectangle ground;
+
+
+
+    private CircleController circleController;
 	private int score = 0;
 	private float runTime = 0;
 	private int midPointY;
 	private GameRenderer renderer;
-	
+	int WIDTH = 100;
 	private GameState currentState;
+    public static int ROWS = 4;
+    public static int COLUMNS = 6;
 
 	public enum GameState {
 		MENU, READY, RUNNING, GAMEOVER, HIGHSCORE
@@ -25,10 +24,11 @@ public class GameWorld {
 	public GameWorld(int midPointY) {
 		currentState = GameState.MENU;
 		this.midPointY = midPointY;
-		bird = new Bird(33, midPointY - 5, 17, 12);
+        circleController = new CircleController(ROWS,COLUMNS);
+//		bird = new Bird(33, midPointY - 5, 17, 12);
 		// The grass should start 66 pixels below the midPointY
-		scroller = new ScrollHandler(this, midPointY + 66);
-		ground = new Rectangle(0, midPointY + 56, 137, 11);
+//		scroller = new ScrollHandler(this, midPointY + 66);
+//		ground = new Rectangle(0, midPointY + 56, 137, 11);
 	}
 
 	public void update(float delta) {
@@ -50,60 +50,22 @@ public class GameWorld {
 	}
 
 	private void updateReady(float delta) {
-		bird.updateReady(runTime);
-		scroller.updateReady(delta);
 	}
 
 	public void updateRunning(float delta) {
 		if (delta > .15f) {
 			delta = .15f;
 		}
-
-		bird.update(delta);
-		scroller.update(delta);
-
-		if (scroller.collides(bird) && bird.isAlive()) {
-			scroller.stop();
-			bird.die();
-			AssetLoader.dead.play();
-			renderer.prepareTransition(255, 255, 255, .3f);
-			//currentState = GameState.GAMEOVER;
-			AssetLoader.fall.play();
-		}
-
-		if (Intersector.overlaps(bird.getBoundingCircle(), ground)) {
-
-			if (bird.isAlive()) {
-				AssetLoader.dead.play();
-				renderer.prepareTransition(255, 255, 255, .3f);
-
-				bird.die();
-			}
-
-			scroller.stop();
-			bird.decelerate();
-			currentState = GameState.GAMEOVER;
-
-			if (score > AssetLoader.getHighScore()) {
-				AssetLoader.setHighScore(score);
-				currentState = GameState.HIGHSCORE;
-			}
-		}
-	}
-
-	public Bird getBird() {
-		return bird;
+        circleController.update(delta);
 
 	}
+
 
 	public int getMidPointY() {
 		return midPointY;
 	}
 
-	public ScrollHandler getScroller() {
-		return scroller;
-	}
-
+    public CircleController getCircleController() { return circleController;}
 	public int getScore() {
 		return score;
 	}
@@ -123,8 +85,7 @@ public class GameWorld {
 
 	public void restart() {
 		score = 0;
-		bird.onRestart(midPointY - 5);
-		scroller.onRestart();
+//		bird.onRestart(midPointY - 5);
 		ready();
 	}
 
