@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.maurice.virolLibgdx.GameWorld.GameRenderer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
+import com.maurice.virolLibgdx.Networking.NetworkManager;
 import com.maurice.virolLibgdx.ZBHelpers.InputHandler;
 
 public class GameScreen implements Screen {
@@ -26,6 +27,7 @@ public class GameScreen implements Screen {
 		Gdx.input.setInputProcessor(new InputHandler(world, screenWidth / gameWidth, screenHeight / gameHeight));
 		renderer = new GameRenderer(world, (int) gameHeight,(int)gameWidth, midPointY);
 		world.setRenderer(renderer);
+        NetworkManager networkManager = new NetworkManager();
 	}
 
 	@Override

@@ -118,7 +118,7 @@ public class GameRenderer {
         shapeRenderer.begin(ShapeType.Filled);
 
         // Draw Background color
-        shapeRenderer.setColor(10 / 255.0f, 40 / 255.0f, 51 / 255.0f, 1);
+        shapeRenderer.setColor(80 / 255.0f, 88 / 255.0f, 91 / 255.0f, 1);
         shapeRenderer.rect(0, 0, gameDimensions.x, gameDimensions.y);
 
         shapeRenderer.end();
