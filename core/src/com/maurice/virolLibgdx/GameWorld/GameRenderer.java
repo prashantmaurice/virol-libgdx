@@ -47,6 +47,7 @@ public class GameRenderer {
 
 	// Game Assets
 	private TextureRegion[] circleMap = new TextureRegion[4];
+    private TextureRegion blast1;
 	private Animation birdAnimation;
 
 	// Tween stuff
@@ -56,6 +57,9 @@ public class GameRenderer {
 	// Buttons
 	private List<SimpleButton> menuButtons;
 	private Color transitionColor;
+
+    //colors
+    private Color bluePlayer = new Color(51f / 255f, 181f / 255f, 229f / 255f, 1);
 
 	public GameRenderer(GameWorld world, int gameHeight, int gameWidth, int midPointY) {
 		myWorld = world;
@@ -94,6 +98,7 @@ public class GameRenderer {
         circleMap[1] = AssetLoader.circle1;
         circleMap[2] = AssetLoader.circle2;
         circleMap[3] = AssetLoader.circle3;
+        blast1 = AssetLoader.blast1;
 	}
 
     public void render(float delta, float runTime) {
@@ -142,12 +147,47 @@ public class GameRenderer {
         circlesArray = circleController.getCiclesArray();
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
+                if(circlesArray[i][j].getValue()==0)batcher.setColor(Color.GRAY);
+                else batcher.setColor(bluePlayer);
                 batcher.draw(circleMap[circlesArray[i][j].getValue()],
                         circlesArray[i][j].getActualPosition().x ,
                         circlesArray[i][j].getActualPosition().y,
                         circlesArray[i][j].getCircleDia()/2, circlesArray[i][j].getCircleDia()/2,
                         circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
                         1, 1, circlesArray[i][j].getRotation());
+
+                //draw blasts
+                if(circlesArray[i][j].inBlast()) {
+
+                    float alpha = 2 * circlesArray[i][j].getBlastRadius() / circlesArray[i][j].getCircleDia();
+                    if (alpha > 1) alpha = 2 - alpha;
+                    batcher.setColor(bluePlayer.r, bluePlayer.g, bluePlayer.b, alpha);
+                    batcher.draw(blast1,
+                            circlesArray[i][j].getActualPosition().x + circlesArray[i][j].getBlastRadius(),
+                            circlesArray[i][j].getActualPosition().y,
+                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
+                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                            1, 1, 0);
+                    batcher.draw(blast1,
+                            circlesArray[i][j].getActualPosition().x,
+                            circlesArray[i][j].getActualPosition().y + circlesArray[i][j].getBlastRadius(),
+                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
+                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                            1, 1, 90);
+                    batcher.draw(blast1,
+                            circlesArray[i][j].getActualPosition().x - circlesArray[i][j].getBlastRadius(),
+                            circlesArray[i][j].getActualPosition().y,
+                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
+                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                            1, 1, 180);
+                    batcher.draw(blast1,
+                            circlesArray[i][j].getActualPosition().x,
+                            circlesArray[i][j].getActualPosition().y - circlesArray[i][j].getBlastRadius(),
+                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
+                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                            1, 1, 270);
+
+                }
             }
         }
 

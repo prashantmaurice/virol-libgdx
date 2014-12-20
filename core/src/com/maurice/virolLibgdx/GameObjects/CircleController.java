@@ -10,6 +10,8 @@ public class CircleController {
 	private float rotation;
 	private float width;
 	private float height;
+    public static float BLAST_TIME = 0.5f;//1 secs
+    private static CircleController instance;
 
     public Circle[][] getCiclesArray() {
         return ciclesArray;
@@ -25,8 +27,19 @@ public class CircleController {
 	public CircleController(int x, int y) {
 		this.ROWS = x;
 		this.COLUMNS = y;
-
+        instance=this;
 	}
+    public static CircleController getInstance(){
+        return instance;
+    }
+    public Circle getCircle(int x, int y){
+        return ciclesArray[x][y];
+    }
+    public void addCircleValue(int x, int y){
+        if((x>=ROWS)||(x<0)||(y>=COLUMNS)||(y<0)) return;
+        ciclesArray[x][y].addValue();
+    }
+
     public void createBoard(int boardX,int boardY){
         ciclesArray = new Circle[GameWorld.ROWS][GameWorld.COLUMNS];
         for(int i=0;i<GameWorld.ROWS;i++){

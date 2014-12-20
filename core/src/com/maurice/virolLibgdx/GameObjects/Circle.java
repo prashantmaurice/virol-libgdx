@@ -2,6 +2,12 @@ package com.maurice.virolLibgdx.GameObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.maurice.virolLibgdx.TweenAccessors.Value;
+import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
+
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenEquations;
+import aurelienribon.tweenengine.TweenManager;
 
 public class Circle {
 
@@ -20,9 +26,16 @@ public class Circle {
     private int circleDia;
 	private float rotation;
     private int value;
+    private boolean inBlast = false;
+
+    public float getBlastRadius() {
+        return blastRadius.getValue();
+    }
+
+    private Value blastRadius = new Value();;
+    private TweenManager manager = new TweenManager();
 
 
-	private com.badlogic.gdx.math.Circle boundingCircle;
 
 
     public Vector2 getActualPosition() {
@@ -34,24 +47,54 @@ public class Circle {
         tileDim = new Vector2(dimX, dimY);
         circleDia = Math.min(dimX,dimY);
         actualPosition = new Vector2(x*dimX, y*dimY);
-		boundingCircle = new com.badlogic.gdx.math.Circle();
         value=0;
+
+        //blast stuff
+        blastRadius.setValue(0);
+
 	}
 
 	public void update(float delta) {
 
 		// Rotate counterclockwise
         rotation -= 100 * delta*value;
+        manager.update(delta);
+        if((inBlast)&&(blastRadius.getValue()==circleDia)){
+            inBlast = false;
+            blastcomplete();
+        }
 
 	}
+
+    public void blast(){
+        inBlast=true;
+        blastRadius.setValue(0);
+        Tween.registerAccessor(Value.class, new ValueAccessor());
+        Tween.to(blastRadius, -1, CircleController.BLAST_TIME).target(circleDia)
+                .ease(TweenEquations.easeOutQuad).start(manager);
+    }
+    public void blastcomplete(){
+        value=0;
+        CircleController.getInstance().addCircleValue((int)gridPosition.x+1,(int)gridPosition.y);
+        CircleController.getInstance().addCircleValue((int)gridPosition.x-1,(int)gridPosition.y);
+        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y+1);
+        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y-1);
+    }
+
 
 	public void updateReady(float runTime) {
 	}
 
 	public void onClick() {
         Gdx.app.log("CIRCLE", "Clicked circle:"+gridPosition.x+"=="+gridPosition.y);
-        if(value<3)value++;
+        addValue();
 	}
+    public void addValue(){
+        if(value<3)value++;
+        else{
+            blast();
+        }
+    }
 
 	public void die() {
 	}
@@ -89,5 +132,9 @@ public class Circle {
 
     public int getValue() {
         return value;
+    }
+
+    public boolean inBlast() {
+        return inBlast;
     }
 }

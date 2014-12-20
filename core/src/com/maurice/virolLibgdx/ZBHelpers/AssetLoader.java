@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AssetLoader {
 
 	public static Texture circleTexture1,circleTexture2,circleTexture3,circleTexture0,
-            logoTexture;
+            logoTexture,blastTexture1;
 	public static TextureRegion circle1, circle2, circle3, circle0,
-            logo;
+            logo, blast1;
 	public static Animation birdAnimation;
 	public static Sound dead, flap, coin, fall;
 	public static BitmapFont font, shadow, whiteFont;
@@ -44,6 +44,11 @@ public class AssetLoader {
         circleTexture3 = new Texture(Gdx.files.internal("data/circles/circle3.png"));
         circle3 = new TextureRegion(circleTexture3, 0, 0, CIRCLES_DIA, CIRCLES_DIA);
         circle3.flip(false, true);
+
+        //BLAST
+        blastTexture1 = new Texture(Gdx.files.internal("data/circles/adder.png"));
+        blast1 = new TextureRegion(blastTexture1, 0, 0, CIRCLES_DIA, CIRCLES_DIA);
+        blast1.flip(false, true);
 
 //		texture = new Texture(Gdx.files.internal("data/texture3.png"));
 //		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
