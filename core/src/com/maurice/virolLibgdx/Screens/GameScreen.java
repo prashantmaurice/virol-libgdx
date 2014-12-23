@@ -16,24 +16,24 @@ public class GameScreen extends AbstractGameScreen{
 	private GameWorld world;
 	private GameRenderer renderer;
 	private float runTime;
-    private static int GAME_WIDTH = 136;
-    InputHandler input;
+    private InputHandler inputHandler;
+
 
 	// This is the constructor, not the class declaration
 	public GameScreen(ZBGame zbgame) {
         super(zbgame);
         this.game = zbgame;
-		float screenWidth = Gdx.graphics.getWidth();
-		float screenHeight = Gdx.graphics.getHeight();
-		float gameWidth = GAME_WIDTH;
-		float gameHeight = screenHeight / (screenWidth / gameWidth);
-		int midPointY = (int) (gameHeight / 2);
+        this.world = zbgame.world;
+        renderer = new GameRenderer(world);
+        world.setRenderer(renderer);
 
-		world = new GameWorld(midPointY);
-        input = new InputHandler(world, screenWidth / gameWidth, screenHeight / gameHeight, this);
-		Gdx.input.setInputProcessor(input);
-		renderer = new GameRenderer(world, (int) gameHeight,(int)gameWidth);
-		world.setRenderer(renderer);
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        float gameWidth = ZBGame.GAME_WIDTH;
+        float gameHeight = screenHeight / (screenWidth / ZBGame.GAME_WIDTH);
+        inputHandler = new InputHandler(screenWidth / gameWidth, screenHeight / gameHeight);
+        Gdx.input.setInputProcessor(inputHandler);
+
         NetworkManager networkManager = new NetworkManager();
 	}
 
@@ -76,11 +76,11 @@ public class GameScreen extends AbstractGameScreen{
         ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
                 ScreenTransitionSlide.UP, false, Interpolation.sineOut);
         game.setScreen(new SettingsScreen(game), transition);
-        System.out.println("changescreen called");
+        System.out.println("change screen called");
     }
     @Override
     public InputProcessor getInputProcessor () {
-        System.out.println("input processor 1 requested");
-        return input;
+        System.out.println("GameScreen input processor requested");
+        return inputHandler;
     }
 }

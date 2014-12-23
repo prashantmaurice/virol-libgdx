@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AssetLoader {
 
 	public static Texture circleTexture1,circleTexture2,circleTexture3,circleTexture0,
-            logoTexture,blastTexture1;
+            logoTexture,virollogoTexture,blastTexture1;
 	public static TextureRegion circle1, circle2, circle3, circle0,
-            logo, blast1;
+            logo,virollogo, blast1;
 	public static Animation birdAnimation;
 	public static Sound dead, flap, coin, fall;
 	public static BitmapFont font, shadow, whiteFont;
@@ -23,10 +23,13 @@ public class AssetLoader {
 
 	public static void load() {
 
-		logoTexture = new Texture(Gdx.files.internal("data/logo.png"));
+		logoTexture = new Texture(Gdx.files.internal("data/MauriceLogo.png"));
 		logoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//
 		logo = new TextureRegion(logoTexture, 0, 0, 512, 114);
+
+        virollogoTexture = new Texture(Gdx.files.internal("data/VirolLogo.png"));
+        virollogoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        virollogo = new TextureRegion(virollogoTexture, 0, 0, 512, 114);
 
         //FOR CIRCLES
         circleTexture0 = new Texture(Gdx.files.internal("data/circles/circle0.png"));

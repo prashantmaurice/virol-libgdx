@@ -2,31 +2,44 @@ package com.maurice.virolLibgdx.ZombieBird;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.Screens.AbstractGameScreen;
-import com.maurice.virolLibgdx.Screens.GameScreen;
+import com.maurice.virolLibgdx.Screens.SplashScreen;
 import com.maurice.virolLibgdx.Transitions.ScreenTransition;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
+import com.maurice.virolLibgdx.ZBHelpers.InputHandler;
 
 public class ZBGame extends Game {
     private AbstractGameScreen currScreen;
     private AbstractGameScreen nextScreen;
     private boolean init;
+    private static ZBGame instance;
     private FrameBuffer currFbo;
     private FrameBuffer nextFbo;
     private SpriteBatch batch;
     private float t;
     private ScreenTransition screenTransition;
+    public static InputHandler inputHandler;
+    public GameWorld world;
+    public static int GAME_WIDTH = 136;
+    public static int GAME_HEIGHT;
 
 	@Override
 	public void create() {
 		AssetLoader.load();
-        currScreen=new GameScreen(this);
+        currScreen=new SplashScreen(this);
         setScreen(currScreen);
+        instance = this;
+        setupGameWorld();
         System.out.println("Game created");
 	}
+    public static ZBGame getInstance(){
+        return instance;
+    }
 
     //SCREEN TRANSITION RELATED
     public void setScreen (AbstractGameScreen screen) {
@@ -126,6 +139,19 @@ public class ZBGame extends Game {
             batch.dispose();
             init = false;
         }
+    }
+
+    public void setupGameWorld(){
+        float screenWidth = Gdx.graphics.getWidth();
+        float screenHeight = Gdx.graphics.getHeight();
+        GAME_HEIGHT = (int) (screenHeight / (screenWidth / GAME_WIDTH));
+
+        world = GameWorld.getInstance();
+        Gdx.input.setInputProcessor(inputHandler);
+//
+    }
+    public static InputProcessor getInputProcessor() {
+        return inputHandler;
     }
 
 }

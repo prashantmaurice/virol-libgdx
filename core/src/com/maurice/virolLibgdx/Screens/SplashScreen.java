@@ -1,7 +1,6 @@
 package com.maurice.virolLibgdx.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,7 +15,7 @@ import aurelienribon.tweenengine.TweenEquations;
 import aurelienribon.tweenengine.TweenManager;
 
 
-public class SplashScreen implements Screen {
+public class SplashScreen extends AbstractGameScreen{
 
 	private TweenManager manager;
 	private SpriteBatch batcher;
@@ -24,6 +23,7 @@ public class SplashScreen implements Screen {
 	private ZBGame game;
 
 	public SplashScreen(ZBGame game) {
+        super(game);
 		this.game = game;
 	}
 
@@ -51,7 +51,7 @@ public class SplashScreen implements Screen {
 		TweenCallback cb = new TweenCallback() {
 			@Override
 			public void onEvent(int type, BaseTween<?> source) {
-				game.setScreen(new GameScreen(game));
+                game.world.menu();
 			}
 		};
 

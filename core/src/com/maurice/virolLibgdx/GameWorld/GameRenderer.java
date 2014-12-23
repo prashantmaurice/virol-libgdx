@@ -16,6 +16,7 @@ import com.maurice.virolLibgdx.TweenAccessors.Value;
 import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 import com.maurice.virolLibgdx.ZBHelpers.InputHandler;
+import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.SimpleButton;
 
 import java.util.List;
@@ -61,7 +62,9 @@ public class GameRenderer {
     //colors
     private Color bluePlayer = new Color(51f / 255f, 181f / 255f, 229f / 255f, 1);
 
-	public GameRenderer(GameWorld world, int gameHeight, int gameWidth) {
+	public GameRenderer(GameWorld world) {
+        int gameHeight = (int) ZBGame.GAME_HEIGHT;
+        int gameWidth = ZBGame.GAME_WIDTH;
 		myWorld = world;
         gameDimensions = new Vector2(gameWidth, gameHeight);
         myWorld.createBoard((int)gameDimensions.x,(int)gameDimensions.y);
@@ -110,7 +113,7 @@ public class GameRenderer {
         shapeRenderer.begin(ShapeType.Filled);
 
         // Draw Background color
-        shapeRenderer.setColor(80 / 255.0f, 88 / 255.0f, 91 / 255.0f, 1);
+        shapeRenderer.setColor(28 / 255.0f, 32 / 255.0f, 47 / 255.0f, 1);
         shapeRenderer.rect(0, 0, gameDimensions.x, gameDimensions.y);
 
         shapeRenderer.end();
@@ -204,8 +207,8 @@ public class GameRenderer {
 	private void drawReady() {
 		//batcher.draw(ready, 136/2-28, midPointY - 50, 57, 14);
 		AssetLoader.font.setScale(0.06f, -0.06f);
-		AssetLoader.font.draw(batcher, "READY",
-				48, midPointY - 70);
+		AssetLoader.font.draw(batcher, "TAP TO START",
+				34, midPointY - 70);
 	}
 
 	private void drawGameOver() {

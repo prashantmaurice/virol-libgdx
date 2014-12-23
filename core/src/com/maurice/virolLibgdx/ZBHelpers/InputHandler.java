@@ -3,7 +3,6 @@ package com.maurice.virolLibgdx.ZBHelpers;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
-import com.maurice.virolLibgdx.Screens.GameScreen;
 import com.maurice.virolLibgdx.ui.SimpleButton;
 
 import java.util.List;
@@ -12,18 +11,15 @@ public class InputHandler implements InputProcessor {
 	private GameWorld myWorld;
 
 	private List<SimpleButton> menuButtons;
-    GameScreen gameScreen;
+//    GameScreen gameScreen;
 	private SimpleButton playButton;
 
 	private float scaleFactorX;
 	private float scaleFactorY;
 
-	public InputHandler(GameWorld myWorld, float scaleFactorX,
-			float scaleFactorY, GameScreen gameScreen) {
-		this.myWorld = myWorld;
-        this.gameScreen=gameScreen;
-
-		int midPointY = myWorld.getMidPointY();
+	public InputHandler(float scaleFactorX,
+			float scaleFactorY) {
+		this.myWorld = GameWorld.getInstance();
 
 		this.scaleFactorX = scaleFactorX;
 		this.scaleFactorY = scaleFactorY;
@@ -40,12 +36,14 @@ public class InputHandler implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		screenX = scaleX(screenX);
 		screenY = scaleY(screenY);
-        System.out.println("TouchDown...!");
+        System.out.println("TouchDown...!"+myWorld.isMenu()+""+myWorld.isReady()+""+myWorld.isRunning());
 		if (myWorld.isMenu()) {
 			//playButton.isTouchDown(screenX, screenY);
 			myWorld.ready();
+            myWorld.start();
 		} else if (myWorld.isReady()) {
-            gameScreen.getSettingsMenu();
+//            gameScreen.getSettingsMenu();
+//            myWorld.isMenu();
 //			myWorld.start();
 		} else if (myWorld.isRunning()) {
             myWorld.getCircleController().onclick(screenX,screenY);

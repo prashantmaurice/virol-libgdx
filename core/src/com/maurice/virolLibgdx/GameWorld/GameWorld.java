@@ -1,7 +1,13 @@
 package com.maurice.virolLibgdx.GameWorld;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.maurice.virolLibgdx.GameObjects.CircleController;
+import com.maurice.virolLibgdx.Screens.GameScreen;
+import com.maurice.virolLibgdx.Screens.MenuScreen;
+import com.maurice.virolLibgdx.Transitions.ScreenTransition;
+import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
+import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 
 public class GameWorld {
 
@@ -10,10 +16,10 @@ public class GameWorld {
 
     private CircleController circleController;
 	private int score = 0;
+    private static GameWorld instance;
 	private float runTime = 0;
-	private int midPointY;
+    private ZBGame game;
 	private GameRenderer renderer;
-	int WIDTH = 100;
 	private GameState currentState;
     public static int ROWS = 4;
     public static int COLUMNS = 6;
@@ -27,15 +33,15 @@ public class GameWorld {
 		MENU, READY, RUNNING, GAMEOVER, HIGHSCORE
 	}
 
-	public GameWorld(int midPointY) {
-		currentState = GameState.MENU;
-		this.midPointY = midPointY;
+	public GameWorld(ZBGame game) {
+		currentState = GameState.READY;
         circleController = new CircleController(ROWS,COLUMNS);
-//		bird = new Bird(33, midPointY - 5, 17, 12);
-		// The grass should start 66 pixels below the midPointY
-//		scroller = new ScrollHandler(this, midPointY + 66);
-//		ground = new Rectangle(0, midPointY + 56, 137, 11);
+        this.game = game;
 	}
+    public static GameWorld getInstance(){
+        if(instance==null) instance = new GameWorld(ZBGame.getInstance());
+        return instance;
+    }
     public void createBoard(int boardX,int boardY){
         circleController.createBoard(boardX,boardY);
     }
@@ -69,9 +75,6 @@ public class GameWorld {
 	}
 
 
-	public int getMidPointY() {
-		return midPointY;
-	}
 
     public CircleController getCircleController() { return circleController;}
 	public int getScore() {
@@ -82,15 +85,20 @@ public class GameWorld {
 		score += increment;
 	}
 
-	public void start() {
-		currentState = GameState.RUNNING;
-	}
 
-
+    public void menu() {
+        currentState = GameState.MENU;
+        game.setScreen(new MenuScreen(game));
+    }
     public void ready() {
 		currentState = GameState.READY;
-		renderer.prepareTransition(0, 0, 0, 1f);
+        ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
+                ScreenTransitionSlide.UP, false, Interpolation.sineOut);
+        game.setScreen(new GameScreen(game),transition);
 	}
+    public void start() {
+        currentState = GameState.RUNNING;
+    }
 
 	public void restart() {
 		score = 0;
