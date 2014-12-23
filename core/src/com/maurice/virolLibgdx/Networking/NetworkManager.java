@@ -57,7 +57,6 @@ public class NetworkManager {
                 @Override
                 public void call(Object... args) {
                     JSONArray obj = (JSONArray)args[0];
-                    Gdx.app.log("NETWORK", "received all users"+obj);
                     playersOnline.clear();
                     for(int i=0;i<obj.length();i++){
                         try {

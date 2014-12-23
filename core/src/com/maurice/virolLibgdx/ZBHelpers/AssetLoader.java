@@ -135,6 +135,8 @@ public class AssetLoader {
 		if (!prefs.contains("highScore")) {
 			prefs.putInteger("highScore", 0);
 		}
+
+        System.out.println("All assets loaded");
 	}
 
 	public static void setHighScore(int val) {

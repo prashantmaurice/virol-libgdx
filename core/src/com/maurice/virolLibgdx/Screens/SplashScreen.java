@@ -51,7 +51,7 @@ public class SplashScreen implements Screen {
 		TweenCallback cb = new TweenCallback() {
 			@Override
 			public void onEvent(int type, BaseTween<?> source) {
-				game.setScreen(new GameScreen());
+				game.setScreen(new GameScreen(game));
 			}
 		};
 

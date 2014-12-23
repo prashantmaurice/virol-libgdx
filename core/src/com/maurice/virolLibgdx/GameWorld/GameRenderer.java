@@ -61,18 +61,18 @@ public class GameRenderer {
     //colors
     private Color bluePlayer = new Color(51f / 255f, 181f / 255f, 229f / 255f, 1);
 
-	public GameRenderer(GameWorld world, int gameHeight, int gameWidth, int midPointY) {
+	public GameRenderer(GameWorld world, int gameHeight, int gameWidth) {
 		myWorld = world;
         gameDimensions = new Vector2(gameWidth, gameHeight);
         myWorld.createBoard((int)gameDimensions.x,(int)gameDimensions.y);
 
         myWorld.setDimensions(gameDimensions);
-		this.midPointY = midPointY;
+		this.midPointY = (int) (gameDimensions.y/2);
 		this.menuButtons = ((InputHandler) Gdx.input.getInputProcessor())
 				.getMenuButtons();
 
-		cam = new OrthographicCamera();
-		cam.setToOrtho(true, gameDimensions.x, gameHeight);
+		cam = new OrthographicCamera(gameDimensions.x, gameDimensions.y);
+		cam.setToOrtho(true, gameDimensions.x, gameDimensions.y);
 
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
@@ -81,6 +81,7 @@ public class GameRenderer {
 
 		initGameObjects();
 		initAssets();
+        cam.update();
 
 		transitionColor = new Color();
 		prepareTransition(255, 255, 255, .5f);
