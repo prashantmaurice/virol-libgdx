@@ -32,19 +32,19 @@ public class AssetLoader {
         virollogo = new TextureRegion(virollogoTexture, 0, 0, 512, 114);
 
         //FOR CIRCLES
-        circleTexture0 = new Texture(Gdx.files.internal("data/circles/circle0.png"));
+        circleTexture0 = new Texture(Gdx.files.internal("data/circles/circle0_copy.png"));
         circle0 = new TextureRegion(circleTexture0, 0, 0, CIRCLES_DIA, CIRCLES_DIA);
         circle0.flip(false, true);
 
-        circleTexture1 = new Texture(Gdx.files.internal("data/circles/circle1.png"));
+        circleTexture1 = new Texture(Gdx.files.internal("data/circles/circle1_copy.png"));
         circle1 = new TextureRegion(circleTexture1, 0, 0, CIRCLES_DIA, CIRCLES_DIA);
         circle1.flip(false, true);
 
-        circleTexture2 = new Texture(Gdx.files.internal("data/circles/circle2.png"));
+        circleTexture2 = new Texture(Gdx.files.internal("data/circles/circle2_copy.png"));
         circle2 = new TextureRegion(circleTexture2, 0, 0, CIRCLES_DIA, CIRCLES_DIA);
         circle2.flip(false, true);
 
-        circleTexture3 = new Texture(Gdx.files.internal("data/circles/circle3.png"));
+        circleTexture3 = new Texture(Gdx.files.internal("data/circles/circle3_copy.png"));
         circle3 = new TextureRegion(circleTexture3, 0, 0, CIRCLES_DIA, CIRCLES_DIA);
         circle3.flip(false, true);
 

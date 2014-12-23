@@ -18,6 +18,7 @@ public class Circle {
     private Vector2 gridPosition;
     private Vector2 actualPosition;
     private Vector2 tileDim;
+    private boolean isOpponent = false;
 
     public int getCircleDia() {
         return circleDia;
@@ -66,7 +67,7 @@ public class Circle {
 
 	}
 
-    public void blast(){
+    public void blast(boolean byOpponent){
         inBlast=true;
         blastRadius.setValue(0);
         Tween.registerAccessor(Value.class, new ValueAccessor());
@@ -75,24 +76,25 @@ public class Circle {
     }
     public void blastcomplete(){
         value=0;
-        CircleController.getInstance().addCircleValue((int)gridPosition.x+1,(int)gridPosition.y);
-        CircleController.getInstance().addCircleValue((int)gridPosition.x-1,(int)gridPosition.y);
-        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y+1);
-        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y-1);
+        CircleController.getInstance().addCircleValue((int)gridPosition.x+1,(int)gridPosition.y,isOpponent);
+        CircleController.getInstance().addCircleValue((int) gridPosition.x - 1, (int) gridPosition.y, isOpponent);
+        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y+1,isOpponent);
+        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y-1,isOpponent);
     }
 
 
 	public void updateReady(float runTime) {
 	}
 
-	public void onClick() {
+	public void onClick(boolean byOpponent) {
         Gdx.app.log("CIRCLE", "Clicked circle:"+gridPosition.x+"=="+gridPosition.y);
-        addValue();
+        addValue(byOpponent);
 	}
-    public void addValue(){
+    public void addValue(boolean byOpponent){
+        isOpponent = byOpponent;
         if(value<3)value++;
         else{
-            blast();
+            blast(byOpponent);
         }
     }
 
@@ -136,5 +138,12 @@ public class Circle {
 
     public boolean inBlast() {
         return inBlast;
+    }
+    public boolean isOpponent(){ return isOpponent;}
+
+    public boolean isValid(boolean isCurrMoveOpponent) {
+        if(value==0) return true;
+        if((value<=3)&&(isOpponent!=isCurrMoveOpponent)) return false ;
+        return true;
     }
 }

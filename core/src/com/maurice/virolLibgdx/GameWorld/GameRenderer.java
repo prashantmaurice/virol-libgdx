@@ -61,6 +61,7 @@ public class GameRenderer {
 
     //colors
     private Color bluePlayer = new Color(51f / 255f, 181f / 255f, 229f / 255f, 1);
+    private Color redPlayer = new Color(226f / 255f, 82f / 255f, 82f / 255f, 1);
 
 	public GameRenderer(GameWorld world) {
         int gameHeight = (int) ZBGame.GAME_HEIGHT;
@@ -126,7 +127,6 @@ public class GameRenderer {
 
 
         batcher.enableBlending();
-        //drawSkulls();
 
         if (myWorld.isRunning()) {
             drawCircles(runTime);
@@ -152,7 +152,11 @@ public class GameRenderer {
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
                 if(circlesArray[i][j].getValue()==0)batcher.setColor(Color.GRAY);
-                else batcher.setColor(bluePlayer);
+                else if(circlesArray[i][j].isOpponent()){
+                    batcher.setColor(redPlayer);
+                }else{
+                    batcher.setColor(bluePlayer);
+                }
                 batcher.draw(circleMap[circlesArray[i][j].getValue()],
                         circlesArray[i][j].getActualPosition().x ,
                         circlesArray[i][j].getActualPosition().y,
@@ -165,7 +169,8 @@ public class GameRenderer {
 
                     float alpha = 2 * circlesArray[i][j].getBlastRadius() / circlesArray[i][j].getCircleDia();
                     if (alpha > 1) alpha = 2 - alpha;
-                    batcher.setColor(bluePlayer.r, bluePlayer.g, bluePlayer.b, alpha);
+                    if(circlesArray[i][j].isOpponent()) batcher.setColor(redPlayer.r, redPlayer.g, redPlayer.b, alpha);
+                    else batcher.setColor(bluePlayer.r, bluePlayer.g, bluePlayer.b, alpha);
                     batcher.draw(blast1,
                             circlesArray[i][j].getActualPosition().x + circlesArray[i][j].getBlastRadius(),
                             circlesArray[i][j].getActualPosition().y,

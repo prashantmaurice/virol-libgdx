@@ -12,6 +12,7 @@ public class CircleController {
 	private float height;
     public static float BLAST_TIME = 0.5f;//1 secs
     private static CircleController instance;
+    private boolean isCurrMoveOpponent = false;
 
     public Circle[][] getCiclesArray() {
         return ciclesArray;
@@ -35,9 +36,9 @@ public class CircleController {
     public Circle getCircle(int x, int y){
         return ciclesArray[x][y];
     }
-    public void addCircleValue(int x, int y){
+    public void addCircleValue(int x, int y,boolean isOpponent){
         if((x>=ROWS)||(x<0)||(y>=COLUMNS)||(y<0)) return;
-        ciclesArray[x][y].addValue();
+        ciclesArray[x][y].addValue(isOpponent);
     }
 
     public void createBoard(int boardX,int boardY){
@@ -101,10 +102,16 @@ public class CircleController {
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
                 if(ciclesArray[i][j].contains(screenX,screenY)){
-                    ciclesArray[i][j].onClick();
+                    if(ciclesArray[i][j].isValid(isCurrMoveOpponent)){
+                        ciclesArray[i][j].onClick(isCurrMoveOpponent==true);
+                        proceedNextMove();
+                    }
                     return;
                 };
             }
         }
+    }
+    public void proceedNextMove(){
+        isCurrMoveOpponent = !isCurrMoveOpponent;
     }
 }
