@@ -21,11 +21,12 @@ public class AssetLoader {
 
     private static int CIRCLES_DIA = 96;
 
+    public static void loadSplash() {
+        logoTexture = new Texture(Gdx.files.internal("data/MauriceLogo.png"));
+        logoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        logo = new TextureRegion(logoTexture, 0, 0, 512, 114);
+    }
 	public static void load() {
-
-		logoTexture = new Texture(Gdx.files.internal("data/MauriceLogo.png"));
-		logoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-		logo = new TextureRegion(logoTexture, 0, 0, 512, 114);
 
         virollogoTexture = new Texture(Gdx.files.internal("data/VirolLogo.png"));
         virollogoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

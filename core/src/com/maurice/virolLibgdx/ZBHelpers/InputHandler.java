@@ -36,7 +36,7 @@ public class InputHandler implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		screenX = scaleX(screenX);
 		screenY = scaleY(screenY);
-        System.out.println("TouchDown...!"+myWorld.isMenu()+""+myWorld.isReady()+""+myWorld.isRunning());
+        System.out.println("TouchDown...!"+myWorld.isMenu()+""+myWorld.isReady()+""+myWorld.isRunning()+""+myWorld.isGameOver());
 		if (myWorld.isMenu()) {
 			//playButton.isTouchDown(screenX, screenY);
 			myWorld.ready();
@@ -47,11 +47,13 @@ public class InputHandler implements InputProcessor {
 //			myWorld.start();
 		} else if (myWorld.isRunning()) {
             myWorld.getCircleController().onclick(screenX,screenY);
-		}
+		} else if (myWorld.isGameOver()) {
+            myWorld.restart();
+        }
 
-		if (myWorld.isGameOver() || myWorld.isHighScore()) {
-			myWorld.restart();
-		}
+//		if (myWorld.isGameOver() || myWorld.isHighScore()) {
+//			myWorld.restart();
+//		}
 
 		return true;
 	}

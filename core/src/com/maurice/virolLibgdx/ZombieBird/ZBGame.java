@@ -2,7 +2,6 @@ package com.maurice.virolLibgdx.ZombieBird;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -21,20 +20,22 @@ public class ZBGame extends Game {
     private FrameBuffer currFbo;
     private FrameBuffer nextFbo;
     private SpriteBatch batch;
-    private float t;
+    private float transitionTime;
     private ScreenTransition screenTransition;
-    public static InputHandler inputHandler;
+
     public GameWorld world;
+    public static InputHandler inputHandler;
     public static int GAME_WIDTH = 136;
     public static int GAME_HEIGHT;
 
 	@Override
 	public void create() {
-		AssetLoader.load();
-        currScreen=new SplashScreen(this);
-        setScreen(currScreen);
+        AssetLoader.loadSplash();
         instance = this;
+        currScreen=new SplashScreen(this);
         setupGameWorld();
+        setScreen(currScreen);
+		AssetLoader.load();
         System.out.println("Game created");
 	}
     public static ZBGame getInstance(){
@@ -66,7 +67,7 @@ public class ZBGame extends Game {
         Gdx.input.setInputProcessor(null); // disable input
         System.out.println("Input processor diabled");
         this.screenTransition = screenTransition;
-        t = 0;
+        transitionTime = 0;
         System.out.println("Screen set");
     }
 
@@ -83,8 +84,8 @@ public class ZBGame extends Game {
             if (screenTransition != null)
                 duration = screenTransition.getDuration();
             // update progress of ongoing transition
-            t = Math.min(t + deltaTime, duration);
-            if (screenTransition == null || t >= duration) {
+            transitionTime = Math.min(transitionTime + deltaTime, duration);
+            if (screenTransition == null || transitionTime >= duration) {
                 //no transition effect set or transition has just finished
                 if (currScreen != null) currScreen.hide();
                 nextScreen.resume();
@@ -104,7 +105,7 @@ public class ZBGame extends Game {
                 nextScreen.render(deltaTime);
                 nextFbo.end();
                 // render transition effect to screen
-                float alpha = t / duration;
+                float alpha = transitionTime / duration;
                 screenTransition.render(batch,
                         currFbo.getColorBufferTexture(),
                         nextFbo.getColorBufferTexture(),
@@ -148,10 +149,5 @@ public class ZBGame extends Game {
 
         world = GameWorld.getInstance();
         Gdx.input.setInputProcessor(inputHandler);
-//
     }
-    public static InputProcessor getInputProcessor() {
-        return inputHandler;
-    }
-
 }

@@ -106,7 +106,7 @@ public class MenuScreen extends AbstractGameScreen{
     }
     private void drawReady() {
         //batcher.draw(ready, 136/2-28, midPointY - 50, 57, 14);
-        AssetLoader.font.setScale(0.06f, -0.06f);
+        AssetLoader.font.setScale(0.06f, 0.06f);
         AssetLoader.font.draw(batcher, "TAP TO START",
                 34, screenHeight/2 + 70);
     }

@@ -217,7 +217,9 @@ public class GameRenderer {
 	}
 
 	private void drawGameOver() {
-		//batcher.draw(gameOver, 136/2-33, midPointY - 50, 67, 14);
+        AssetLoader.font.setScale(0.12f, -0.12f);
+        AssetLoader.font.draw(batcher, "GAMEOVER",
+                24, midPointY - 10);
 	}
 
 	private void drawScore() {

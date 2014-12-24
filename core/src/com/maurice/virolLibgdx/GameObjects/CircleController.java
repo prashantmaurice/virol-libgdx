@@ -40,7 +40,9 @@ public class CircleController {
         if((x>=ROWS)||(x<0)||(y>=COLUMNS)||(y<0)) return;
         ciclesArray[x][y].addValue(isOpponent);
     }
-
+    public void restart(){
+        createBoard(ROWS,COLUMNS);
+    }
     public void createBoard(int boardX,int boardY){
         ciclesArray = new Circle[GameWorld.ROWS][GameWorld.COLUMNS];
         for(int i=0;i<GameWorld.ROWS;i++){
@@ -113,5 +115,29 @@ public class CircleController {
     }
     public void proceedNextMove(){
         isCurrMoveOpponent = !isCurrMoveOpponent;
+    }
+
+    public void checkGameOver() {
+        int sum = 0;
+        int opponent = 0;
+        int player = 0;
+        for(int i=0;i<GameWorld.ROWS;i++){
+            for(int j=0;j<GameWorld.COLUMNS;j++){
+                sum+=ciclesArray[i][j].getValue();
+                if(ciclesArray[i][j].getValue()>0){
+                    if(ciclesArray[i][j].isOpponent()){
+                        opponent++;
+                    }else{
+                        player++;
+                    }
+                }
+            }
+        }
+        if(sum>5){
+            if((opponent==0)||(player==0)){
+                GameWorld.getInstance().gameover();
+                System.out.println("GameOver called");
+            }
+        }
     }
 }

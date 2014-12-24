@@ -56,7 +56,11 @@ public class GameWorld {
 
 		case RUNNING:
 			updateRunning(delta);
+            checkGameOver();
 			break;
+        case GAMEOVER:
+            updateRunning(delta);
+            break;
 		default:
 			break;
 		}
@@ -96,15 +100,20 @@ public class GameWorld {
                 ScreenTransitionSlide.UP, false, Interpolation.sineOut);
         game.setScreen(new GameScreen(game),transition);
 	}
+    public void gameover() {
+        currentState = GameState.GAMEOVER;
+    }
     public void start() {
         currentState = GameState.RUNNING;
     }
+    public void restart(){
+        createBoard(ZBGame.GAME_WIDTH,ZBGame.GAME_HEIGHT);
+        currentState = GameState.RUNNING;
+    }
 
-	public void restart() {
-		score = 0;
-//		bird.onRestart(midPointY - 5);
-		ready();
-	}
+    public void checkGameOver(){
+        circleController.checkGameOver();
+    }
 
 	public boolean isReady() {
 		return currentState == GameState.READY;
