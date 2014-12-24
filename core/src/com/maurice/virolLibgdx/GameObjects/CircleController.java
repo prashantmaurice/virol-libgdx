@@ -135,7 +135,7 @@ public class CircleController {
         }
         if(sum>5){
             if((opponent==0)||(player==0)){
-                GameWorld.getInstance().gameover();
+                GameWorld.getInstance().gameover(player==0);
                 System.out.println("GameOver called");
             }
         }

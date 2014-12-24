@@ -219,7 +219,13 @@ public class GameRenderer {
 	private void drawGameOver() {
         AssetLoader.font.setScale(0.12f, -0.12f);
         AssetLoader.font.draw(batcher, "GAMEOVER",
-                24, midPointY - 10);
+                14, midPointY - 10);
+
+        AssetLoader.font.setScale(0.06f, -0.06f);
+
+        String text  = ((myWorld.LAST_WON_OPPONENT)?"REDS":"BLUES")+" WON";
+        AssetLoader.font.draw(batcher, text,
+                34, midPointY + 10);
 	}
 
 	private void drawScore() {

@@ -23,6 +23,7 @@ public class GameWorld {
 	private GameState currentState;
     public static int ROWS = 4;
     public static int COLUMNS = 6;
+    public boolean LAST_WON_OPPONENT = false;
     private int CIRCLE_DIAMETER;
 
     public void setDimensions(Vector2 gameDimensions) {
@@ -100,8 +101,9 @@ public class GameWorld {
                 ScreenTransitionSlide.UP, false, Interpolation.sineOut);
         game.setScreen(new GameScreen(game),transition);
 	}
-    public void gameover() {
+    public void gameover(boolean lastWonIsOpponent) {
         currentState = GameState.GAMEOVER;
+        LAST_WON_OPPONENT = lastWonIsOpponent;
     }
     public void start() {
         currentState = GameState.RUNNING;
