@@ -111,18 +111,18 @@ public class GameRenderer {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        shapeRenderer.begin(ShapeType.Filled);
 
         // Draw Background color
+        shapeRenderer.begin(ShapeType.Filled);
         shapeRenderer.setColor(28 / 255.0f, 32 / 255.0f, 47 / 255.0f, 1);
         shapeRenderer.rect(0, 0, gameDimensions.x, gameDimensions.y);
-
         shapeRenderer.end();
 
+
         batcher.begin();
-        batcher.disableBlending();
 
 //        enable this to set background
+//        batcher.disableBlending();
 //        batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
 
@@ -134,6 +134,7 @@ public class GameRenderer {
             drawReady();
         } else if (myWorld.isMenu()) {
         } else if (myWorld.isGameOver()) {
+            drawCircles(runTime);
             drawGameOver();
             drawRetry();
         } else if (myWorld.isHighScore()) {
@@ -143,6 +144,7 @@ public class GameRenderer {
 
 
         batcher.end();
+
         drawTransition(delta);
 
     }
@@ -217,10 +219,10 @@ public class GameRenderer {
 	}
 
 	private void drawGameOver() {
+
         AssetLoader.font.setScale(0.12f, -0.12f);
         AssetLoader.font.draw(batcher, "GAMEOVER",
                 14, midPointY - 10);
-
         AssetLoader.font.setScale(0.06f, -0.06f);
 
         String text  = ((myWorld.LAST_WON_OPPONENT)?"REDS":"BLUES")+" WON";

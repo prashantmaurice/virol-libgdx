@@ -17,6 +17,7 @@ public class InputHandler implements InputProcessor {
 	private float scaleFactorX;
 	private float scaleFactorY;
 
+
 	public InputHandler(float scaleFactorX,
 			float scaleFactorY) {
 		this.myWorld = GameWorld.getInstance();
@@ -30,6 +31,13 @@ public class InputHandler implements InputProcessor {
 //				midPointY + 50, 29, 16, AssetLoader.playButtonUp,
 //				AssetLoader.playButtonDown);
 //		menuButtons.add(playButton);
+//        (new Handler()).postDelayed(new Runnable() {
+//            public void run() {
+//                resendUnsentMetaData();
+//                resendUnsentMessages();
+//
+//            }
+//        }, 1000);//send after 1 secs to make sure poll is before sending messages
 	}
 
 	@Override

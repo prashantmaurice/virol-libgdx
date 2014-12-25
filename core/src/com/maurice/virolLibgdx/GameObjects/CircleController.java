@@ -1,18 +1,15 @@
 package com.maurice.virolLibgdx.GameObjects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 
 public class CircleController {
 
-	private Vector2 position;
 	private float rotation;
-	private float width;
-	private float height;
     public static float BLAST_TIME = 0.5f;//1 secs
     private static CircleController instance;
     private boolean isCurrMoveOpponent = false;
+    private int runningAnimations = 0;
 
     public Circle[][] getCiclesArray() {
         return ciclesArray;
@@ -21,9 +18,6 @@ public class CircleController {
     private Circle[][] ciclesArray;
     private int ROWS;
     private int COLUMNS;
-
-
-	private com.badlogic.gdx.math.Circle boundingCircle;
 
 	public CircleController(int x, int y) {
 		this.ROWS = x;
@@ -63,44 +57,8 @@ public class CircleController {
 
 	}
 
-	public void updateReady(float runTime) {
-//		position.y = 2 * (float) Math.sin(7 * runTime) + originalY;
-	}
-
-	public void onClick() {
-        Gdx.app.log("CIRCLE", "Clicked");
-	}
-
-	public void die() {
-	}
-
-	public void onRestart(int y) {
-		rotation = 0;
-		position.y = y;
-	}
-
-	public float getX() {
-		return position.x;
-	}
-
-	public float getY() {
-		return position.y;
-	}
-
-	public float getWidth() {
-		return width;
-	}
-
-	public float getHeight() {
-		return height;
-	}
-
-	public float getRotation() {
-		return rotation;
-	}
-
-
     public void onclick(int screenX, int screenY) {
+        if(runningAnimations>0) return;
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
                 if(ciclesArray[i][j].contains(screenX,screenY)){
@@ -115,6 +73,17 @@ public class CircleController {
     }
     public void proceedNextMove(){
         isCurrMoveOpponent = !isCurrMoveOpponent;
+    }
+    public void addBlastAnimation(){
+        runningAnimations++;
+        Timer.Task task = new Timer.Task() {
+            @Override
+            public void run() {
+                runningAnimations--;
+            }
+        };
+        Timer y = new Timer();
+        y.scheduleTask(task,CircleController.BLAST_TIME);
     }
 
     public void checkGameOver() {

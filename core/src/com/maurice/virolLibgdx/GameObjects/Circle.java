@@ -29,6 +29,7 @@ public class Circle {
     private int value;
     private boolean inBlast = false;
 
+
     public float getBlastRadius() {
         return blastRadius.getValue();
     }
@@ -73,6 +74,7 @@ public class Circle {
         Tween.registerAccessor(Value.class, new ValueAccessor());
         Tween.to(blastRadius, -1, CircleController.BLAST_TIME).target(circleDia)
                 .ease(TweenEquations.easeOutQuad).start(manager);
+        CircleController.getInstance().addBlastAnimation();
     }
     public void blastcomplete(){
         value=0;
@@ -85,7 +87,6 @@ public class Circle {
 
 	public void updateReady(float runTime) {
 	}
-
 	public void onClick(boolean byOpponent) {
         Gdx.app.log("CIRCLE", "Clicked circle:"+gridPosition.x+"=="+gridPosition.y);
         addValue(byOpponent);
@@ -96,10 +97,13 @@ public class Circle {
         else{
             blast(byOpponent);
         }
+
     }
+
 
 	public void die() {
 	}
+
 
 	public void onRestart(int y) {
 		rotation = 0;
