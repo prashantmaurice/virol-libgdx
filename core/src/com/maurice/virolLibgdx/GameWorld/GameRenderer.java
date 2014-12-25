@@ -241,9 +241,11 @@ public class GameRenderer {
 	}
 
     private void drawDebug(){
-        AssetLoader.font.setScale(0.1f, -0.1f);
+        AssetLoader.font.setScale(0.05f, -0.05f);
         AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
                 0, midPointY - 90);
+        AssetLoader.font.draw(batcher, "core"+myWorld.GAME_SCORE,
+                0, midPointY + 90);
     }
 
 	private void drawHighScore() {

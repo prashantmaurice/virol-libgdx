@@ -63,10 +63,11 @@ public class CircleController {
         if(ciclesArray[i][j].isValid()){
             if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.PLAYER){
                 changePlayState(GameWorld.PlayState.ANIM_PLAYER);
+                ciclesArray[i][j].onClick(false);
             }else if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.OPPONENT){
                 changePlayState(GameWorld.PlayState.ANIM_OPPONENT);
+                ciclesArray[i][j].onClick(true);
             }
-            ciclesArray[i][j].onClick(isCurrMoveOpponent==true);
             proceedNextMove();
         }
     }

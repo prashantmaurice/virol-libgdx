@@ -3,11 +3,14 @@ package com.maurice.virolLibgdx.GameWorld;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.maurice.virolLibgdx.GameObjects.CircleController;
+import com.maurice.virolLibgdx.GameObjects.Point;
+import com.maurice.virolLibgdx.OpponentIntelligence.AI;
 import com.maurice.virolLibgdx.Screens.GameScreen;
 import com.maurice.virolLibgdx.Screens.MenuScreen;
 import com.maurice.virolLibgdx.Transitions.ScreenTransition;
 import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
+
 
 public class GameWorld {
 
@@ -25,6 +28,7 @@ public class GameWorld {
     public static int COLUMNS = 6;
     public boolean LAST_WON_OPPONENT = false;
     private int CIRCLE_DIAMETER;
+    public float GAME_SCORE=0;
     public PlayState currPlayState = PlayState.PLAYER;
 
     public void setDimensions(Vector2 gameDimensions) {
@@ -76,7 +80,9 @@ public class GameWorld {
     private void checkForAI(){
         if(currPlayState==PlayState.OPPONENT){
             System.out.println("AI Checked For AI");
-            circleController.move(1,1);
+            Point nextMove = AI.getNextMove(circleController);
+            GAME_SCORE = AI.calculateScore(circleController);
+            circleController.move(nextMove.x,nextMove.y);
         }
 
     }
