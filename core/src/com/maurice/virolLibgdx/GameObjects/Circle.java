@@ -87,7 +87,7 @@ public class Circle {
     public void addValue(boolean byOpponent){
         isOpponent = byOpponent;
         if(value<3) {
-            AssetLoader.coin.play(0.005f);//30% volume
+            AssetLoader.coin.play(0.005f,2,0);//30% volume
             value++;
             CircleController.getInstance().addNonBlastAnimation();
         }

@@ -7,7 +7,7 @@ public class CircleController {
 
 	private float rotation;
     public static float BLAST_TIME = 0.5f;//1 secs
-    public static float NON_BLAST_TIME = 0.5f;//1 secs
+    public static float NON_BLAST_TIME = 0.35f;//1 secs
     private static CircleController instance;
     public boolean isCurrMoveOpponent = false;
     public int runningAnimations = 0;

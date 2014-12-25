@@ -62,13 +62,14 @@ public class GameRenderer {
     //colors
     private Color bluePlayer = new Color(51f / 255f, 181f / 255f, 229f / 255f, 1);
     private Color redPlayer = new Color(226f / 255f, 82f / 255f, 82f / 255f, 1);
+    private Color greenText = new Color(122f / 255f, 255f / 255f, 122f / 255f, 1);
+    private Color whiteText = new Color(255f / 255f, 255f / 255f, 255f / 255f, 1);
+
 
 	public GameRenderer(GameWorld world) {
-        int gameHeight = (int) ZBGame.GAME_HEIGHT;
-        int gameWidth = ZBGame.GAME_WIDTH;
 		myWorld = world;
-        gameDimensions = new Vector2(gameWidth, gameHeight);
-        myWorld.createBoard((int)gameDimensions.x,(int)gameDimensions.y);
+        gameDimensions = new Vector2(ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
+        myWorld.createBoard((int)gameDimensions.x,(int)(gameDimensions.y*0.9f));
 
         myWorld.setDimensions(gameDimensions);
 		this.midPointY = (int) (gameDimensions.y/2);
@@ -207,27 +208,27 @@ public class GameRenderer {
 
 	private void drawRetry() {
 		//batcher.draw(retry, 136/2-28, midPointY + 10, 56, 14);
-		AssetLoader.font.setScale(0.06f, -0.06f);
-		AssetLoader.font.draw(batcher, "TAP TO RETRY",
+		AssetLoader.whiteFont.setScale(0.06f, -0.06f);
+		AssetLoader.whiteFont.draw(batcher, "TAP TO RETRY",
 				34, midPointY + 90);
 	}
 
 	private void drawReady() {
 		//batcher.draw(ready, 136/2-28, midPointY - 50, 57, 14);
-		AssetLoader.font.setScale(0.06f, -0.06f);
-		AssetLoader.font.draw(batcher, "TAP TO START",
+		AssetLoader.whiteFont.setScale(0.06f, -0.06f);
+		AssetLoader.whiteFont.draw(batcher, "TAP TO START",
 				34, midPointY - 70);
 	}
 
 	private void drawGameOver() {
 
-        AssetLoader.font.setScale(0.12f, -0.12f);
-        AssetLoader.font.draw(batcher, "GAMEOVER",
+        AssetLoader.whiteFont.setScale(0.12f, -0.12f);
+        AssetLoader.whiteFont.draw(batcher, "GAMEOVER",
                 14, midPointY - 10);
-        AssetLoader.font.setScale(0.06f, -0.06f);
+        AssetLoader.whiteFont.setScale(0.06f, -0.06f);
 
         String text  = ((myWorld.LAST_WON_OPPONENT)?"REDS":"BLUES")+" WON";
-        AssetLoader.font.draw(batcher, text,
+        AssetLoader.whiteFont.draw(batcher, text,
                 34, midPointY + 10);
 	}
 
@@ -235,16 +236,19 @@ public class GameRenderer {
 		int length = ("" + myWorld.getScore()).length();
 		//AssetLoader.shadow.draw(batcher, "" + myWorld.getScore(),
 			//	68 - (3 * length), midPointY - 82);
-		AssetLoader.font.setScale(0.25f, -0.25f);
-		AssetLoader.font.draw(batcher, "" + myWorld.getScore(),
+		AssetLoader.whiteFont.setScale(0.25f, -0.25f);
+		AssetLoader.whiteFont.draw(batcher, "" + myWorld.getScore(),
 				68 - (3 * length), midPointY - 90);
 	}
 
     private void drawDebug(){
-        AssetLoader.font.setScale(0.05f, -0.05f);
-        AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
-                0, midPointY - 90);
-        AssetLoader.font.draw(batcher, "core"+myWorld.GAME_SCORE,
+        AssetLoader.whiteFont.setScale(0.15f, -0.15f);
+        AssetLoader.whiteFont.setColor(whiteText);
+        int length = ("" + myWorld.currPlayState).length();
+        AssetLoader.whiteFont.draw(batcher, ""+myWorld.currPlayState,
+                gameDimensions.x- (6 * length), midPointY + 93);
+        AssetLoader.whiteFont.setScale(0.2f, -0.2f);
+        AssetLoader.whiteFont.draw(batcher, ""+myWorld.GAME_SCORE,
                 0, midPointY + 90);
     }
 
