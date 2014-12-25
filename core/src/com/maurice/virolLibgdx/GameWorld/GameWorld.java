@@ -2,6 +2,7 @@ package com.maurice.virolLibgdx.GameWorld;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.maurice.virolLibgdx.GameObjects.CircleController;
 import com.maurice.virolLibgdx.GameObjects.Point;
 import com.maurice.virolLibgdx.OpponentIntelligence.AI;
@@ -30,6 +31,7 @@ public class GameWorld {
     private int CIRCLE_DIAMETER;
     public float GAME_SCORE=0;
     public PlayState currPlayState = PlayState.PLAYER;
+    private boolean AIMoveRequested = false;
 
     public void setDimensions(Vector2 gameDimensions) {
         CIRCLE_DIAMETER = (int)(((gameDimensions.x/ROWS)<(gameDimensions.y/COLUMNS))?(gameDimensions.x/ROWS):(gameDimensions.y/COLUMNS));
@@ -79,10 +81,23 @@ public class GameWorld {
 
     private void checkForAI(){
         if(currPlayState==PlayState.OPPONENT){
-            System.out.println("AI Checked For AI");
-            Point nextMove = AI.getNextMove(circleController);
-            GAME_SCORE = AI.calculateScore(circleController);
-            circleController.move(nextMove.x,nextMove.y);
+            Timer.Task task = new Timer.Task() {
+                @Override
+                public void run() {
+                    System.out.println("AI Checked For AI");
+                    AIMoveRequested=true;
+                    Point nextMove = AI.getNextMove(circleController);
+                    GAME_SCORE = AI.calculateScore(circleController);
+                    circleController.move(nextMove.x,nextMove.y);
+                    AIMoveRequested=false;
+                }
+            };
+            if(!AIMoveRequested){
+                Timer y = new Timer();
+                y.scheduleTask(task,0);
+            }
+
+
         }
 
     }

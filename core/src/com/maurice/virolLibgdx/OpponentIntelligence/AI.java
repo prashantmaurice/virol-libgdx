@@ -34,7 +34,7 @@ public class AI {
         for(int i=0;i<validPoints.size();i++){
             Point opponentMove = validPoints.get(i);
             float score = getScoreAfter2Moves(ciclesArrayInt,opponentMove);
-            Gdx.app.log("AI2", "Opponent Score of ("+opponentMove.x+","+opponentMove.y+") is "+score);
+//            Gdx.app.log("AI2", "Opponent Score of ("+opponentMove.x+","+opponentMove.y+") is "+score);
             if(score<curr_bestScore){
 //                Gdx.app.log("AI2", "Best move set to ("+opponentMove.x+","+opponentMove.y+") with score "+score);
                 curr_bestScore = score;
@@ -55,22 +55,22 @@ public class AI {
 
         //CALCULATE BEST MOVE WITH MAX SCORE
         float curr_bestScore = -100000;
-        Gdx.app.log("AI2", "afterOpponent : "+printDoubleArray(afterOpponent));
-        Gdx.app.log("ERROR", "validPoints : "+validPoints.toString());
-        Gdx.app.log("AI2", "validPoints : "+validPoints.size());
+//        Gdx.app.log("AI2", "afterOpponent : "+printDoubleArray(afterOpponent));
+//        Gdx.app.log("ERROR", "validPoints : "+validPoints.toString());
+//        Gdx.app.log("AI2", "validPoints : "+validPoints.size());
         Point curr_BestMove = validPoints.get(0);
         for(int i=0;i<validPoints.size();i++){
             Point playerMove = validPoints.get(i);
             Integer[][] afterPlayer = getCirclesArrayAfter(afterOpponent, playerMove, false);
-            Gdx.app.log("AI2", "afterPlayer : "+printDoubleArray(afterPlayer));
+//            Gdx.app.log("AI2", "afterPlayer : "+printDoubleArray(afterPlayer));
             float score = calculateScore(afterPlayer);
-            Gdx.app.log("AI2", "Player Score of ("+playerMove.x+","+playerMove.y+") is "+score);
+//            Gdx.app.log("AI2", "Player Score of ("+playerMove.x+","+playerMove.y+") is "+score);
             if(score>curr_bestScore){
                 curr_bestScore = score;
                 curr_BestMove = playerMove;
             }
         }
-        Gdx.app.log("AI2", "Best player's move set to ("+curr_BestMove.x+","+curr_BestMove.y+") with score "+curr_bestScore);
+//        Gdx.app.log("AI2", "Best player's move set to ("+curr_BestMove.x+","+curr_BestMove.y+") with score "+curr_bestScore);
         return curr_bestScore;
     }
 
