@@ -164,7 +164,7 @@ public class GameRenderer {
                         circlesArray[i][j].getActualPosition().y,
                         circlesArray[i][j].getCircleDia()/2, circlesArray[i][j].getCircleDia()/2,
                         circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
-                        1, 1, circlesArray[i][j].getRotation());
+                        0.5f, 0.5f, circlesArray[i][j].getRotation());
 
                 //draw blasts
                 if(circlesArray[i][j].inBlast()) {

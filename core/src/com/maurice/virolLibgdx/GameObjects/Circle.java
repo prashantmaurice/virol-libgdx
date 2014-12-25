@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.TweenAccessors.Value;
 import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
+import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenEquations;
@@ -76,8 +77,6 @@ public class Circle {
         CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y-1,isOpponent);
     }
 
-	public void updateReady(float runTime) {
-	}
 
 	public void onClick(boolean byOpponent) {
         Gdx.app.log("CIRCLE", "Clicked circle:"+gridPosition.x+"=="+gridPosition.y);
@@ -88,16 +87,17 @@ public class Circle {
     public void addValue(boolean byOpponent){
         isOpponent = byOpponent;
         if(value<3) {
+            AssetLoader.coin.play(0.005f);//30% volume
             value++;
             CircleController.getInstance().addNonBlastAnimation();
         }
         else{
+            AssetLoader.blast.play();
             blast(byOpponent);
             CircleController.getInstance().addBlastAnimation();
         }
     }
 
-	public void die() {}
 
 	public void onRestart(int y) {
 		rotation = 0;

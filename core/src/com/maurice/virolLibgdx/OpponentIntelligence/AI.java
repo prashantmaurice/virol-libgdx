@@ -149,10 +149,10 @@ public class AI {
                 float addScore = 0;
                 addScore += ciclesArrayInt[i][i];
                 if((j==0)|(j>=GameWorld.COLUMNS)){
-                    addScore/=2;
+                    addScore=(addScore*3)/4;
                 }
                 if((i==0)|(i>=GameWorld.ROWS)){
-                    addScore/=2;
+                    addScore=(addScore*3)/4;
                 }
                 score+=addScore;
             }

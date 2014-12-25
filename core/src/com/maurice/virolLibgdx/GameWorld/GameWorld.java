@@ -17,7 +17,6 @@ public class GameWorld {
 
 
 
-
     private CircleController circleController;
 	private int score = 0;
     private static GameWorld instance;
@@ -32,6 +31,11 @@ public class GameWorld {
     public float GAME_SCORE=0;
     public PlayState currPlayState = PlayState.PLAYER;
     private boolean AIMoveRequested = false;
+
+    //gesture stuff
+    public int GESTURE_RADIUS = 0;
+    public Point GESTURE_POINT = new Point(0,0);
+    public boolean GESTURE_ON = false;
 
     public void setDimensions(Vector2 gameDimensions) {
         CIRCLE_DIAMETER = (int)(((gameDimensions.x/ROWS)<(gameDimensions.y/COLUMNS))?(gameDimensions.x/ROWS):(gameDimensions.y/COLUMNS));
@@ -76,8 +80,12 @@ public class GameWorld {
 		default:
 			break;
 		}
+        updateGestureUI();
         checkForAI();
 	}
+    private void updateGestureUI(){
+
+    }
 
     private void checkForAI(){
         if(currPlayState==PlayState.OPPONENT){

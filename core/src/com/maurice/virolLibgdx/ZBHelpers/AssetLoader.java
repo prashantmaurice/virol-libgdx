@@ -9,13 +9,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetLoader {
-
+    private static AssetLoader instance;
 	public static Texture circleTexture1,circleTexture2,circleTexture3,circleTexture0,
             logoTexture,virollogoTexture,blastTexture1;
 	public static TextureRegion circle1, circle2, circle3, circle0,
             logo,virollogo, blast1;
 	public static Animation birdAnimation;
-	public static Sound dead, flap, coin, fall;
+	public static Sound dead, blast, coin, fall;
 	public static BitmapFont font, shadow, whiteFont;
 	private static Preferences prefs;
 
@@ -120,10 +120,10 @@ public class AssetLoader {
 //		barflip = new TextureRegion(texture2, 411, 0, 102, 256);
 //		barflip.flip(false, false);
 
-		dead = Gdx.audio.newSound(Gdx.files.internal("data/dead.wav"));
-		flap = Gdx.audio.newSound(Gdx.files.internal("data/flap.wav"));
-		coin = Gdx.audio.newSound(Gdx.files.internal("data/coin.wav"));
-		fall = Gdx.audio.newSound(Gdx.files.internal("data/fall.wav"));
+		dead = Gdx.audio.newSound(Gdx.files.internal("audio/dead.wav"));
+		blast = Gdx.audio.newSound(Gdx.files.internal("audio/blast.wav"));
+		coin = Gdx.audio.newSound(Gdx.files.internal("audio/coin.wav"));
+		fall = Gdx.audio.newSound(Gdx.files.internal("audio/fall.wav"));
 
 		font = new BitmapFont(Gdx.files.internal("data/aharoni_blue.fnt"));
 		font.setScale(0.25f, -0.25f);
@@ -159,7 +159,7 @@ public class AssetLoader {
 
 		// Dispose sounds
 		dead.dispose();
-		flap.dispose();
+		blast.dispose();
 		coin.dispose();
 
 		font.dispose();
