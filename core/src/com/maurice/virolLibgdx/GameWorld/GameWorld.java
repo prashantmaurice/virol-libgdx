@@ -25,6 +25,7 @@ public class GameWorld {
     public static int COLUMNS = 6;
     public boolean LAST_WON_OPPONENT = false;
     private int CIRCLE_DIAMETER;
+    public PlayState currPlayState = PlayState.PLAYER;
 
     public void setDimensions(Vector2 gameDimensions) {
         CIRCLE_DIAMETER = (int)(((gameDimensions.x/ROWS)<(gameDimensions.y/COLUMNS))?(gameDimensions.x/ROWS):(gameDimensions.y/COLUMNS));
@@ -33,6 +34,10 @@ public class GameWorld {
     public enum GameState {
 		MENU, READY, RUNNING, GAMEOVER, HIGHSCORE
 	}
+    public enum PlayState {
+        //in the order of cycle
+        PLAYER,ANIM_PLAYER,OPPONENT,ANIM_OPPONENT
+    }
 
 	public GameWorld(ZBGame game) {
 		currentState = GameState.READY;
@@ -65,8 +70,16 @@ public class GameWorld {
 		default:
 			break;
 		}
-
+        checkForAI();
 	}
+
+    private void checkForAI(){
+        if(currPlayState==PlayState.OPPONENT){
+            System.out.println("AI Checked For AI");
+            circleController.move(1,1);
+        }
+
+    }
 
 	private void updateReady(float delta) {
 	}

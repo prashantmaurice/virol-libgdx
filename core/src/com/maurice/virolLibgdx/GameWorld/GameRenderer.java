@@ -201,6 +201,7 @@ public class GameRenderer {
                 }
             }
         }
+        drawDebug();
 
     }
 
@@ -238,6 +239,12 @@ public class GameRenderer {
 		AssetLoader.font.draw(batcher, "" + myWorld.getScore(),
 				68 - (3 * length), midPointY - 90);
 	}
+
+    private void drawDebug(){
+        AssetLoader.font.setScale(0.1f, -0.1f);
+        AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
+                0, midPointY - 90);
+    }
 
 	private void drawHighScore() {
 		//batcher.draw(highScore, 22, midPointY - 50, 96, 14);

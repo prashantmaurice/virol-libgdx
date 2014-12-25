@@ -7,9 +7,10 @@ public class CircleController {
 
 	private float rotation;
     public static float BLAST_TIME = 0.5f;//1 secs
+    public static float NON_BLAST_TIME = 0.1f;//1 secs
     private static CircleController instance;
-    private boolean isCurrMoveOpponent = false;
-    private int runningAnimations = 0;
+    public boolean isCurrMoveOpponent = false;
+    public int runningAnimations = 0;
 
     public Circle[][] getCiclesArray() {
         return ciclesArray;
@@ -56,16 +57,26 @@ public class CircleController {
         }
 
 	}
+    public void move(int i, int j){
+        if((i>=GameWorld.ROWS)||(i<0)) return;
+        if((j>=GameWorld.COLUMNS)||(j<0)) return;
+        if(ciclesArray[i][j].isValid()){
+            if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.PLAYER){
+                changePlayState(GameWorld.PlayState.ANIM_PLAYER);
+            }else if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.OPPONENT){
+                changePlayState(GameWorld.PlayState.ANIM_OPPONENT);
+            }
+            ciclesArray[i][j].onClick(isCurrMoveOpponent==true);
+            proceedNextMove();
+        }
+    }
 
     public void onclick(int screenX, int screenY) {
         if(runningAnimations>0) return;
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
                 if(ciclesArray[i][j].contains(screenX,screenY)){
-                    if(ciclesArray[i][j].isValid(isCurrMoveOpponent)){
-                        ciclesArray[i][j].onClick(isCurrMoveOpponent==true);
-                        proceedNextMove();
-                    }
+                    move(i,j);
                     return;
                 };
             }
@@ -80,10 +91,35 @@ public class CircleController {
             @Override
             public void run() {
                 runningAnimations--;
+                if(runningAnimations==0){
+                    if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_PLAYER){
+                        changePlayState(GameWorld.PlayState.OPPONENT);
+                    }else if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_OPPONENT){
+                        changePlayState(GameWorld.PlayState.PLAYER);
+                    }
+                }
             }
         };
         Timer y = new Timer();
         y.scheduleTask(task,CircleController.BLAST_TIME);
+    }
+    public void addNonBlastAnimation(){
+        runningAnimations++;
+        Timer.Task task = new Timer.Task() {
+            @Override
+            public void run() {
+                runningAnimations--;
+                if(runningAnimations==0){
+                    if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_PLAYER){
+                        changePlayState(GameWorld.PlayState.OPPONENT);
+                    }else if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_OPPONENT){
+                        changePlayState(GameWorld.PlayState.PLAYER);
+                    }
+                }
+            }
+        };
+        Timer y = new Timer();
+        y.scheduleTask(task,CircleController.NON_BLAST_TIME);
     }
 
     public void checkGameOver() {
@@ -108,5 +144,10 @@ public class CircleController {
                 System.out.println("GameOver called");
             }
         }
+    }
+
+    private void changePlayState(GameWorld.PlayState state){
+        System.out.println("PLAYSTATE: changed to "+state);
+        GameWorld.getInstance().currPlayState = state;
     }
 }
