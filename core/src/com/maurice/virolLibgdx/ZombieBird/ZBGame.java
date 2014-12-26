@@ -27,6 +27,7 @@ public class ZBGame extends Game {
     public static InputHandler inputHandler;
     public static int GAME_WIDTH = 136;
     public static int GAME_HEIGHT;
+    public static int GAME_DASHBOARD_HEIGHT;
 
 	@Override
 	public void create() {
@@ -146,6 +147,7 @@ public class ZBGame extends Game {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
         GAME_HEIGHT = (int) (screenHeight / (screenWidth / GAME_WIDTH));
+        GAME_DASHBOARD_HEIGHT = (int)(GAME_HEIGHT*0.1f);
 
         world = GameWorld.getInstance();
         Gdx.input.setInputProcessor(inputHandler);

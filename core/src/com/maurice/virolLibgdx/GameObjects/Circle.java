@@ -1,7 +1,6 @@
 package com.maurice.virolLibgdx.GameObjects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.TweenAccessors.Value;
 import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
@@ -13,9 +12,9 @@ import aurelienribon.tweenengine.TweenManager;
 
 public class Circle {
 
-    private Vector2 gridPosition;
-    private Vector2 actualPosition;
-    private Vector2 tileDim;
+    private Point gridPosition;
+    private Point actualPosition;
+    private Point tileDim;
     private boolean isOpponent = false;
 
     private int circleDia;
@@ -26,7 +25,7 @@ public class Circle {
     public float getBlastRadius() {
         return blastRadius.getValue();
     }
-    public Vector2 getGridPosition() {
+    public Point getGridPosition() {
         return gridPosition;
     }
 
@@ -34,15 +33,15 @@ public class Circle {
     private Value blastRadius = new Value();;
     private TweenManager manager = new TweenManager();
 
-    public Vector2 getActualPosition() {
+    public Point getActualPosition() {
         return actualPosition;
     }
 
     public Circle(int x, int y, int dimX,int dimY) {
-		gridPosition = new Vector2(x, y);
-        tileDim = new Vector2(dimX, dimY);
+		gridPosition = new Point(x, y);
+        tileDim = new Point(dimX, dimY);
         circleDia = Math.min(dimX,dimY);
-        actualPosition = new Vector2(x*dimX, y*dimY);
+        actualPosition = new Point(x*dimX, y*dimY);
         value=0;
 
         //blast stuff
@@ -116,7 +115,7 @@ public class Circle {
 		return rotation;
 	}
 
-    public Vector2 getTileDim() {
+    public Point getTileDim() {
         return tileDim;
     }
 
@@ -131,6 +130,10 @@ public class Circle {
 
     public int getValue() {
         return value;
+    }
+    public int getAbsoluteValue() {
+        if(isOpponent) return value*-1;
+        else return value;
     }
 
     public boolean inBlast() {

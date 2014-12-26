@@ -2,6 +2,7 @@ package com.maurice.virolLibgdx.GameObjects;
 
 import com.badlogic.gdx.utils.Timer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
+import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 
 public class CircleController {
 
@@ -141,7 +142,8 @@ public class CircleController {
         }
         if(sum>5){
             if((opponent==0)||(player==0)){
-                GameWorld.getInstance().gameover(player==0);
+                AssetLoader.dead.play();
+                GameWorld.getInstance().gameover(player == 0);
                 System.out.println("GameOver called");
             }
         }
@@ -150,5 +152,38 @@ public class CircleController {
     private void changePlayState(GameWorld.PlayState state){
         System.out.println("PLAYSTATE: changed to "+state);
         GameWorld.getInstance().currPlayState = state;
+    }
+
+    public boolean hasSimilarLeft(int i, int j) {
+        if(i==0) return false;
+        int value = getCircle(i,j).getAbsoluteValue();
+        int valueLeft = getCircle(i-1,j).getAbsoluteValue();
+        if(valueLeft==0) return false;
+        if(value==0) return false;//as no color for this
+        return ((value*valueLeft)>0);
+    }
+    public boolean hasSimilarRight(int i, int j) {
+        if(i== GameWorld.ROWS-1) return false;
+        int value = getCircle(i,j).getAbsoluteValue();
+        int valueLeft = getCircle(i+1,j).getAbsoluteValue();
+        if(valueLeft==0) return false;
+        if(value==0) return false;//as no color for this
+        return ((value*valueLeft)>0);
+    }
+    public boolean hasSimilarTop(int i, int j) {
+        if(j==0) return false;
+        int value = getCircle(i,j).getAbsoluteValue();
+        int valueLeft = getCircle(i,j-1).getAbsoluteValue();
+        if(valueLeft==0) return false;
+        if(value==0) return false;//as no color for this
+        return ((value*valueLeft)>0);
+    }
+    public boolean hasSimilarBottom(int i, int j) {
+        if(j==GameWorld.COLUMNS-1) return false;
+        int value = getCircle(i,j).getAbsoluteValue();
+        int valueLeft = getCircle(i,j+1).getAbsoluteValue();
+        if(valueLeft==0) return false;
+        if(value==0) return false;//as no color for this
+        return ((value*valueLeft)>0);
     }
 }

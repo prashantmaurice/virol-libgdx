@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.maurice.virolLibgdx.GameObjects.Circle;
 import com.maurice.virolLibgdx.GameObjects.CircleController;
+import com.maurice.virolLibgdx.GameObjects.Point;
 import com.maurice.virolLibgdx.TweenAccessors.Value;
 import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
@@ -69,7 +70,7 @@ public class GameRenderer {
 	public GameRenderer(GameWorld world) {
 		myWorld = world;
         gameDimensions = new Vector2(ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
-        myWorld.createBoard((int)gameDimensions.x,(int)(gameDimensions.y*0.9f));
+        myWorld.createBoard((int)gameDimensions.x,(int)(gameDimensions.y-ZBGame.GAME_DASHBOARD_HEIGHT));
 
         myWorld.setDimensions(gameDimensions);
 		this.midPointY = (int) (gameDimensions.y/2);
@@ -114,9 +115,15 @@ public class GameRenderer {
 
 
         // Draw Background color
+        shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin(ShapeType.Filled);
         shapeRenderer.setColor(28 / 255.0f, 32 / 255.0f, 47 / 255.0f, 1);
         shapeRenderer.rect(0, 0, gameDimensions.x, gameDimensions.y);
+        shapeRenderer.setColor(1, 1, 1, 1);
+        shapeRenderer.set(ShapeType.Line);
+        drawTerritory();
+//        shapeRenderer.arc(50,50,25,0,90);
+
         shapeRenderer.end();
 
 
@@ -148,6 +155,99 @@ public class GameRenderer {
 
         drawTransition(delta);
 
+    }
+
+    private void drawTerritory() {
+        int SEGMENTS = 10;
+
+        circlesArray = circleController.getCiclesArray();
+        for(int i=0;i<GameWorld.ROWS;i++){
+            for(int j=0;j<GameWorld.COLUMNS;j++){
+                Circle circle_temp = circlesArray[i][j];
+                boolean hasLeft = circleController.hasSimilarLeft(i, j);
+                boolean hasRight = circleController.hasSimilarRight(i, j);
+                boolean hasTop = circleController.hasSimilarTop(i, j);
+                boolean hasBottom = circleController.hasSimilarBottom(i, j);
+
+                if(circlesArray[i][j].getValue()==0){
+
+                }
+                else if(circlesArray[i][j].isOpponent()){
+
+                }else{
+                    int dia = circle_temp.getCircleDia();
+                    int curve_radius = (int) (dia*Math.sqrt(2)/4);
+                    Point x1,c1,c2,x2,x3,c3,x4,c4,x5,c5,x6,c6,x7,c7,x8,c8;
+
+                    if(hasLeft){
+                        x1 = new Point(0,curve_radius);
+                        c1 = new Point(dia/4,curve_radius);
+                        x8 = new Point(0,dia-curve_radius);
+                        c8 = new Point(dia/4,dia-curve_radius);
+                    }else{
+                        x1 = new Point(((dia/2)-curve_radius),dia/2);
+                        c1 = new Point(((dia/2)-curve_radius),dia/4);
+                        x8 = new Point(((dia/2)-curve_radius),dia/2);
+                        c8 = new Point(((dia/2)-curve_radius),dia*3/4);
+                    }
+                    if(hasRight){
+                        x4 = new Point(dia,curve_radius);
+                        c4 = new Point(dia*3/4,curve_radius);
+                        x5 = new Point(dia,dia-curve_radius);
+                        c5 = new Point(dia*3/4,dia-curve_radius);
+                    }else{
+                        x4 = new Point(((dia/2)+curve_radius),dia/2);
+                        c4 = new Point(((dia/2)+curve_radius),dia/4);
+                        x5 = new Point(((dia/2)+curve_radius),dia/2);
+                        c5 = new Point(((dia/2)+curve_radius),dia*3/4);
+                    }
+                    if(hasTop){
+                        x2 = new Point(curve_radius,0);
+                        c2 = new Point(curve_radius,dia/4);
+                        x3 = new Point(dia-curve_radius,0);
+                        c3 = new Point(dia-curve_radius,dia/4);
+                    }else{
+                        x2 = new Point(dia/2,((dia/2)-curve_radius));
+                        c2 = new Point(dia/4,((dia/2)-curve_radius));
+                        x3 = new Point(dia/2,((dia/2)-curve_radius));
+                        c3 = new Point(dia*3/4,((dia/2)-curve_radius));
+                    }
+                    if(hasBottom){
+                        x6 = new Point(dia-curve_radius,dia);
+                        c6 = new Point(dia-curve_radius,dia*3/4);
+                        x7 = new Point(curve_radius,dia);
+                        c7 = new Point(curve_radius,dia*3/4);
+                    }else{
+                        x6 = new Point(dia/2,((dia/2)+curve_radius));
+                        c6 = new Point(dia*3/4,((dia/2)+curve_radius));
+                        x7 = new Point(dia/2,((dia/2)+curve_radius));
+                        c7 = new Point(dia/4,((dia/2)+curve_radius));
+                    }
+
+                    x1.addPoint(circle_temp.getActualPosition());
+                    x2.addPoint(circle_temp.getActualPosition());
+                    x3.addPoint(circle_temp.getActualPosition());
+                    x4.addPoint(circle_temp.getActualPosition());
+                    x5.addPoint(circle_temp.getActualPosition());
+                    x6.addPoint(circle_temp.getActualPosition());
+                    x7.addPoint(circle_temp.getActualPosition());
+                    x8.addPoint(circle_temp.getActualPosition());
+                    c1.addPoint(circle_temp.getActualPosition());
+                    c2.addPoint(circle_temp.getActualPosition());
+                    c3.addPoint(circle_temp.getActualPosition());
+                    c4.addPoint(circle_temp.getActualPosition());
+                    c5.addPoint(circle_temp.getActualPosition());
+                    c6.addPoint(circle_temp.getActualPosition());
+                    c7.addPoint(circle_temp.getActualPosition());
+                    c8.addPoint(circle_temp.getActualPosition());
+                    shapeRenderer.curve(x1.x,x1.y,c1.x,c1.y,c2.x,c2.y,x2.x,x2.y,SEGMENTS);
+                    shapeRenderer.curve(x3.x,x3.y,c3.x,c3.y,c4.x,c4.y,x4.x,x4.y,SEGMENTS);
+                    shapeRenderer.curve(x5.x,x5.y,c5.x,c5.y,c6.x,c6.y,x6.x,x6.y,SEGMENTS);
+                    shapeRenderer.curve(x7.x,x7.y,c7.x,c7.y,c8.x,c8.y,x8.x,x8.y,SEGMENTS);
+                }
+
+            }
+        }
     }
 
     private void drawCircles(float runTime){
@@ -215,8 +315,8 @@ public class GameRenderer {
 
 	private void drawReady() {
 		//batcher.draw(ready, 136/2-28, midPointY - 50, 57, 14);
-		AssetLoader.whiteFont.setScale(0.06f, -0.06f);
-		AssetLoader.whiteFont.draw(batcher, "TAP TO START",
+		AssetLoader.helvetica.setScale(0.06f, -0.06f);
+		AssetLoader.helvetica.draw(batcher, "TAP TO START",
 				34, midPointY - 70);
 	}
 
@@ -242,14 +342,19 @@ public class GameRenderer {
 	}
 
     private void drawDebug(){
-        AssetLoader.whiteFont.setScale(0.15f, -0.15f);
-        AssetLoader.whiteFont.setColor(whiteText);
-        int length = ("" + myWorld.currPlayState).length();
-        AssetLoader.whiteFont.draw(batcher, ""+myWorld.currPlayState,
-                gameDimensions.x- (6 * length), midPointY + 93);
-        AssetLoader.whiteFont.setScale(0.2f, -0.2f);
-        AssetLoader.whiteFont.draw(batcher, ""+myWorld.GAME_SCORE,
+
+//        AssetLoader.whiteFont.setColor(whiteText);
+        AssetLoader.font.setScale(0.06f, -0.06f);
+
+        AssetLoader.font.draw(batcher, "" + myWorld.GAME_SCORE,
                 0, midPointY + 90);
+
+        AssetLoader.font.setScale(0.04f, -0.04f);
+        int length = ("" + myWorld.currPlayState).length();
+        AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
+                gameDimensions.x- (6 * length), midPointY + 93);
+
+
     }
 
 	private void drawHighScore() {

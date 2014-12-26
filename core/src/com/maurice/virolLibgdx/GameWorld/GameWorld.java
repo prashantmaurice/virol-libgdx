@@ -30,6 +30,7 @@ public class GameWorld {
     private int CIRCLE_DIAMETER;
     public float GAME_SCORE=0;
     public PlayState currPlayState = PlayState.PLAYER;
+    public PlayMode currPlayMode = PlayMode.SINGLEPLAYER;
     private boolean AIMoveRequested = false;
 
     //gesture stuff
@@ -41,6 +42,9 @@ public class GameWorld {
         CIRCLE_DIAMETER = (int)(((gameDimensions.x/ROWS)<(gameDimensions.y/COLUMNS))?(gameDimensions.x/ROWS):(gameDimensions.y/COLUMNS));
     }
 
+    public enum PlayMode {
+        SINGLEPLAYER, ONLINE, PAUSE
+    }
     public enum GameState {
 		MENU, READY, RUNNING, GAMEOVER, HIGHSCORE
 	}
@@ -84,30 +88,28 @@ public class GameWorld {
         checkForAI();
 	}
     private void updateGestureUI(){
-
     }
 
     private void checkForAI(){
-        if(currPlayState==PlayState.OPPONENT){
-            Timer.Task task = new Timer.Task() {
-                @Override
-                public void run() {
-                    System.out.println("AI Checked For AI");
-                    AIMoveRequested=true;
-                    Point nextMove = AI.getNextMove(circleController);
-                    GAME_SCORE = AI.calculateScore(circleController);
-                    circleController.move(nextMove.x,nextMove.y);
-                    AIMoveRequested=false;
+        if(currPlayMode==PlayMode.SINGLEPLAYER){
+            if(currPlayState==PlayState.OPPONENT){
+                Timer.Task task = new Timer.Task() {
+                    @Override
+                    public void run() {
+                        System.out.println("AI Checked For AI");
+                        AIMoveRequested=true;
+                        Point nextMove = AI.getNextMove(circleController);
+                        GAME_SCORE = AI.calculateScore(circleController);
+                        circleController.move(nextMove.x,nextMove.y);
+                        AIMoveRequested=false;
+                    }
+                };
+                if(!AIMoveRequested){
+                    Timer y = new Timer();
+                    y.scheduleTask(task,0);
                 }
-            };
-            if(!AIMoveRequested){
-                Timer y = new Timer();
-                y.scheduleTask(task,0);
             }
-
-
         }
-
     }
 
 	private void updateReady(float delta) {
@@ -151,7 +153,7 @@ public class GameWorld {
         currentState = GameState.RUNNING;
     }
     public void restart(){
-        createBoard(ZBGame.GAME_WIDTH,ZBGame.GAME_HEIGHT);
+        createBoard(ZBGame.GAME_WIDTH,ZBGame.GAME_HEIGHT-ZBGame.GAME_DASHBOARD_HEIGHT);
         currentState = GameState.RUNNING;
     }
 

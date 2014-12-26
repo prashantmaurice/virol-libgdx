@@ -16,7 +16,7 @@ public class AssetLoader {
             logo,virollogo, blast1;
 	public static Animation birdAnimation;
 	public static Sound dead, blast, coin, fall;
-	public static BitmapFont font, shadow, whiteFont;
+	public static BitmapFont font, shadow, whiteFont,helvetica, neuropol;
 	private static Preferences prefs;
 
     private static int CIRCLES_DIA = 96;
@@ -130,6 +130,12 @@ public class AssetLoader {
 		
 		whiteFont = new BitmapFont(Gdx.files.internal("data/aharoni_white.fnt"));
 		whiteFont.setScale(0.25f, -0.25f);
+
+        helvetica = new BitmapFont(Gdx.files.internal("fonts/helvetica_bold.fnt"));
+        helvetica.setScale(0.25f, -0.25f);
+
+        neuropol = new BitmapFont(Gdx.files.internal("fonts/neuropol.fnt"));
+        neuropol.setScale(0.25f, -0.25f);
 		
 
 
