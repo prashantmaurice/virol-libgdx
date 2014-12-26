@@ -240,10 +240,16 @@ public class GameRenderer {
                     c6.addPoint(circle_temp.getActualPosition());
                     c7.addPoint(circle_temp.getActualPosition());
                     c8.addPoint(circle_temp.getActualPosition());
-                    shapeRenderer.curve(x1.x,x1.y,c1.x,c1.y,c2.x,c2.y,x2.x,x2.y,SEGMENTS);
-                    shapeRenderer.curve(x3.x,x3.y,c3.x,c3.y,c4.x,c4.y,x4.x,x4.y,SEGMENTS);
-                    shapeRenderer.curve(x5.x,x5.y,c5.x,c5.y,c6.x,c6.y,x6.x,x6.y,SEGMENTS);
-                    shapeRenderer.curve(x7.x,x7.y,c7.x,c7.y,c8.x,c8.y,x8.x,x8.y,SEGMENTS);
+
+                    //remove corners when fill and final draw
+                    if(!(circleController.hasSimilarGeneric(i,j,i-1,j-1)&(hasLeft)&(hasTop)))
+                        shapeRenderer.curve(x1.x,x1.y,c1.x,c1.y,c2.x,c2.y,x2.x,x2.y,SEGMENTS);
+                    if(!(circleController.hasSimilarGeneric(i,j,i+1,j-1)&(hasRight)&(hasTop)))
+                        shapeRenderer.curve(x3.x,x3.y,c3.x,c3.y,c4.x,c4.y,x4.x,x4.y,SEGMENTS);
+                    if(!(circleController.hasSimilarGeneric(i,j,i+1,j+1)&(hasRight)&(hasBottom)))
+                        shapeRenderer.curve(x5.x,x5.y,c5.x,c5.y,c6.x,c6.y,x6.x,x6.y,SEGMENTS);
+                    if(!(circleController.hasSimilarGeneric(i,j,i-1,j+1)&(hasLeft)&(hasBottom)))
+                        shapeRenderer.curve(x7.x,x7.y,c7.x,c7.y,c8.x,c8.y,x8.x,x8.y,SEGMENTS);
                 }
 
             }

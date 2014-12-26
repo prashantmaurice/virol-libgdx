@@ -148,12 +148,25 @@ public class CircleController {
             }
         }
     }
+    private boolean validPoint(int i,int j){
+        if((i>=GameWorld.ROWS)||(i<0)) return false;
+        if((j>=GameWorld.COLUMNS)||(j<0)) return false;
+        return true;
+    }
 
     private void changePlayState(GameWorld.PlayState state){
         System.out.println("PLAYSTATE: changed to "+state);
         GameWorld.getInstance().currPlayState = state;
     }
-
+    public boolean hasSimilarGeneric(int i, int j,int x, int y) {
+        if(!validPoint(i,j)) return false;
+        if(!validPoint(x,y)) return false;
+        int value = getCircle(i,j).getAbsoluteValue();
+        int valueOther = getCircle(x,y).getAbsoluteValue();
+        if(valueOther==0) return false;
+        if(value==0) return false;//as no color for this
+        return ((value*valueOther)>0);
+    }
     public boolean hasSimilarLeft(int i, int j) {
         if(i==0) return false;
         int value = getCircle(i,j).getAbsoluteValue();
