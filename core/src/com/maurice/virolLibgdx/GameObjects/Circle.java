@@ -21,6 +21,13 @@ public class Circle {
 	private float rotation;
     private int value;
     private boolean inBlast = false;
+    private boolean horizontalHinder = false;
+    private boolean verticalHinder = false;
+    private int MAXVALUE = 3;
+    public boolean leftArrowOn = true;
+    public boolean rightArrowOn = true;
+    public boolean topArrowOn = true;
+    public boolean bottomArrowOn = true;
 
     public float getBlastRadius() {
         return blastRadius.getValue();
@@ -46,6 +53,18 @@ public class Circle {
 
         //blast stuff
         blastRadius.setValue(0);
+
+        //corners stuff
+        if((x==GameWorld.ROWS-1)||(x==0)) {
+            MAXVALUE--;
+            if(x==0) leftArrowOn = false;
+            else rightArrowOn = false;
+        }
+        if((y==GameWorld.COLUMNS-1)||(y==0)) {
+            MAXVALUE--;
+            if(y==0) topArrowOn = false;
+            else bottomArrowOn = false;
+        }
 	}
 
 	public void update(float delta) {
@@ -85,7 +104,8 @@ public class Circle {
 
     public void addValue(boolean byOpponent){
         isOpponent = byOpponent;
-        if(value<3) {
+
+        if(value<MAXVALUE) {
             AssetLoader.coin.play(0.005f,2,0);//30% volume
             value++;
             CircleController.getInstance().addNonBlastAnimation();

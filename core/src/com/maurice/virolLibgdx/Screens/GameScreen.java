@@ -33,6 +33,7 @@ public class GameScreen extends AbstractGameScreen{
         float gameHeight = screenHeight / (screenWidth / ZBGame.GAME_WIDTH);
         inputHandler = new InputHandler(screenWidth / gameWidth, screenHeight / gameHeight);
         Gdx.input.setInputProcessor(inputHandler);
+        System.out.println("setInputProcessor screenWidth");
 
         NetworkManager networkManager = new NetworkManager();
 	}

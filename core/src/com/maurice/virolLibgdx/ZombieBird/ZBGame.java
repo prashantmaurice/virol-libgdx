@@ -91,8 +91,8 @@ public class ZBGame extends Game {
                 if (currScreen != null) currScreen.hide();
                 nextScreen.resume();
                 // enable input for next screen
-                Gdx.input.setInputProcessor(
-                        nextScreen.getInputProcessor());
+                Gdx.input.setInputProcessor(nextScreen.getInputProcessor());
+
                 // switch screens
                 currScreen = nextScreen;
                 nextScreen = null;
@@ -150,6 +150,6 @@ public class ZBGame extends Game {
         GAME_DASHBOARD_HEIGHT = (int)(GAME_HEIGHT*0.1f);
 
         world = GameWorld.getInstance();
-        Gdx.input.setInputProcessor(inputHandler);
+//        Gdx.input.setInputProcessor(inputHandler);
     }
 }

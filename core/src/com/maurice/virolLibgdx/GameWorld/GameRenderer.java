@@ -16,7 +16,6 @@ import com.maurice.virolLibgdx.GameObjects.Point;
 import com.maurice.virolLibgdx.TweenAccessors.Value;
 import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
-import com.maurice.virolLibgdx.ZBHelpers.InputHandler;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.SimpleButton;
 
@@ -74,8 +73,8 @@ public class GameRenderer {
 
         myWorld.setDimensions(gameDimensions);
 		this.midPointY = (int) (gameDimensions.y/2);
-		this.menuButtons = ((InputHandler) Gdx.input.getInputProcessor())
-				.getMenuButtons();
+//		this.menuButtons = ((InputHandler) Gdx.input.getInputProcessor())
+//				.getMenuButtons();
 
 		cam = new OrthographicCamera(gameDimensions.x, gameDimensions.y);
 		cam.setToOrtho(true, gameDimensions.x, gameDimensions.y);
@@ -280,25 +279,29 @@ public class GameRenderer {
                     if (alpha > 1) alpha = 2 - alpha;
                     if(circlesArray[i][j].isOpponent()) batcher.setColor(redPlayer.r, redPlayer.g, redPlayer.b, alpha);
                     else batcher.setColor(bluePlayer.r, bluePlayer.g, bluePlayer.b, alpha);
-                    batcher.draw(blast1,
+                    if(circlesArray[i][j].rightArrowOn)
+                        batcher.draw(blast1,
                             circlesArray[i][j].getActualPosition().x + circlesArray[i][j].getBlastRadius(),
                             circlesArray[i][j].getActualPosition().y,
                             circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
                             circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
                             1, 1, 0);
-                    batcher.draw(blast1,
+                    if(circlesArray[i][j].bottomArrowOn)
+                        batcher.draw(blast1,
                             circlesArray[i][j].getActualPosition().x,
                             circlesArray[i][j].getActualPosition().y + circlesArray[i][j].getBlastRadius(),
                             circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
                             circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
                             1, 1, 90);
-                    batcher.draw(blast1,
+                    if(circlesArray[i][j].leftArrowOn)
+                        batcher.draw(blast1,
                             circlesArray[i][j].getActualPosition().x - circlesArray[i][j].getBlastRadius(),
                             circlesArray[i][j].getActualPosition().y,
                             circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
                             circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
                             1, 1, 180);
-                    batcher.draw(blast1,
+                    if(circlesArray[i][j].topArrowOn)
+                        batcher.draw(blast1,
                             circlesArray[i][j].getActualPosition().x,
                             circlesArray[i][j].getActualPosition().y - circlesArray[i][j].getBlastRadius(),
                             circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
@@ -349,7 +352,7 @@ public class GameRenderer {
 
     private void drawDebug(){
 
-//        AssetLoader.whiteFont.setColor(whiteText);
+        AssetLoader.font.setColor(whiteText);
         AssetLoader.font.setScale(0.06f, -0.06f);
 
         AssetLoader.font.draw(batcher, "" + myWorld.GAME_SCORE,
@@ -359,8 +362,6 @@ public class GameRenderer {
         int length = ("" + myWorld.currPlayState).length();
         AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
                 gameDimensions.x- (6 * length), midPointY + 93);
-
-
     }
 
 	private void drawHighScore() {

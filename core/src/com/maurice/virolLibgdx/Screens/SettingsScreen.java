@@ -42,6 +42,7 @@ public class SettingsScreen extends AbstractGameScreen {
         batch = new SpriteBatch();
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+        System.out.println("setInputProcessor stage2");
         shapeRenderer = new ShapeRenderer();
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
