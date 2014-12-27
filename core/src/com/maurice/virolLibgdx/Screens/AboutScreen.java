@@ -15,7 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.maurice.virolLibgdx.GameWorld.GameRenderer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
@@ -45,13 +47,10 @@ public class AboutScreen extends AbstractGameScreen{
     private ShapeRenderer shapeRenderer;
     private Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
-
-    private Label title = new Label("TAP TO START",skin);
+    private TextArea textArea = new TextArea("Hola I am Prashant Maurice",skin);
+    private Label title = new Label("Hola,\n I am Prashant Maurice,\n an Energy drink addicted\n{Web/Android} Developer \nfrom Bangalore",skin);
     private Image logoImage = new Image(AssetLoader.virollogo);
-    private TextButton buttonPlaySingle = new TextButton("Single Player", skin);
-    private TextButton buttonPlayMulti = new TextButton("Multi Player", skin);
-    private TextButton buttonAbout = new TextButton("About Developer", skin);
-    private TextButton buttonExit = new TextButton("Exit", skin);
+    private TextButton buttonBack = new TextButton("Back", skin);
 
 	// This is the constructor, not the class declaration
 	public AboutScreen(ZBGame zbgame) {
@@ -72,6 +71,9 @@ public class AboutScreen extends AbstractGameScreen{
 
         skin.add("default", AssetLoader.font);
 
+        title.setColor(Color.WHITE);
+        title.scaleBy(2);
+
         logoSprite = new Sprite(AssetLoader.virollogo);
         float desiredWidth = ZBGame.GAME_WIDTH * 1.4f;
         float scale = desiredWidth / logoSprite.getWidth();
@@ -87,20 +89,20 @@ public class AboutScreen extends AbstractGameScreen{
 
         //DRAW BACKGROUND
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(UIColors.MENU_DARKBLUE);
-        shapeRenderer.rect(0, 0, ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT / 3);
-        shapeRenderer.setColor(UIColors.MENU_WHITE);
-        shapeRenderer.rect(0, ZBGame.GAME_HEIGHT / 3, ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT * 2 / 3);
-        shapeRenderer.setColor(UIColors.MENU_LIGHTBLUE_LINE);
-        shapeRenderer.rect(0, ZBGame.GAME_HEIGHT / 3,ZBGame.GAME_WIDTH, 3);
+        shapeRenderer.setColor(UIColors.ABOUT_BG);
+        shapeRenderer.rect(0, 0, ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
+//        shapeRenderer.setColor(UIColors.MENU_WHITE);
+//        shapeRenderer.rect(0, ZBGame.GAME_HEIGHT / 3, ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT * 2 / 3);
+//        shapeRenderer.setColor(UIColors.MENU_LIGHTBLUE_LINE);
+//        shapeRenderer.rect(0, ZBGame.GAME_HEIGHT / 3,ZBGame.GAME_WIDTH, 3);
         shapeRenderer.end();
 
 
         batcher.begin();
         batcher.enableBlending();
         batcher.setColor(Color.RED);
-        logoSprite.draw(batcher);
-        drawReady();
+//        logoSprite.draw(batcher);
+//        drawReady();
         batcher.end();
 
         //DRAW TABLE
@@ -118,57 +120,39 @@ public class AboutScreen extends AbstractGameScreen{
 
 	@Override
 	public void show() {
-        buttonPlaySingle.addListener(new ClickListener() {
+        buttonBack.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button SinglePlayer clicked");
-                GameWorld.getInstance().ready();
-                GameWorld.getInstance().start();
-            }
-        });
-        buttonPlayMulti.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button MultiPlayer clicked");
-            }
-        });
-        buttonExit.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button Exit clicked");
-                Gdx.app.exit();
-                // or System.exit(0);
+                ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
+                        ScreenTransitionSlide.RIGHT, false, Interpolation.sineOut);
+                game.setScreen(new MenuScreen(game),transition);
             }
         });
 
-        buttonPlaySingle.setColor(UIColors.MENU_BUTTON);
-        buttonPlaySingle.pad(30).setWidth(screenWidth / 2);
-        buttonPlayMulti.setColor(UIColors.MENU_BUTTON);
-        buttonPlayMulti.pad(30).setWidth(screenWidth / 2);
-        buttonAbout.setColor(UIColors.MENU_BUTTON);
-        buttonAbout.pad(30).setWidth(screenWidth / 2);
-        buttonExit.setColor(UIColors.MENU_BUTTON);
-        buttonExit.pad(30).setWidth(screenWidth / 2);
+        buttonBack.setColor(UIColors.MENU_BUTTON);
+        buttonBack.pad(30).setWidth(screenWidth / 2);
 
 
-        //The elements are displayed in the order you add them.
-        //The first appear on top, the last at the bottom.
 
-//        float width = Gdx.graphics.getWidth();
-//        float desiredWidth = width * 1.9f;
-//        float scale = desiredWidth / logoImage.getWidth();
-//        scale = 2.1f;
-//        logoImage.scaleBy(scale,scale);
-//        logoImage.setSize(logoImage.getWidth() * scale, logoImage.getHeight() * scale);
-//        table.add(logoImage).size(logoImage.getWidth()*scale,logoImage.getHeight()*scale).row();
-//        table.add(title).padBottom(40).row();
+        //TEXT
+        Label.LabelStyle style = title.getStyle();
+        style.font = AssetLoader.DINcondensed;
+        style.fontColor = Color.WHITE;
+        title.setStyle(style);
+        title.setFontScale(2);
+        title.setAlignment(Align.right,Align.right);
+
+
+
+        //FINAL INSERTION IN TABLE
         int padBottom = 20;
         int buttonHeight = 100;
         int buttonWidth = (int) (screenWidth*0.8f);
-
-        table.add(buttonExit).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+        table.add(title).align(Align.right).padRight(10).size(screenWidth, screenHeight - buttonHeight).row();
+        table.add(buttonBack).size(buttonWidth, buttonHeight).row();
         table.setFillParent(true);
         stage.addActor(table);
+//        stage.addActor(textArea);
 
         Gdx.input.setInputProcessor(stage);
         System.out.println("setInputProcessor stage");

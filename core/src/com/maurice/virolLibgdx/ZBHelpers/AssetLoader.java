@@ -16,7 +16,7 @@ public class AssetLoader {
             logo,virollogo, blast1;
 	public static Animation birdAnimation;
 	public static Sound dead, blast, coin, fall;
-	public static BitmapFont font, shadow, whiteFont,helvetica, neuropol;
+	public static BitmapFont font, shadow, whiteFont,helvetica, neuropol, futura, DINcondensed;
 	private static Preferences prefs;
 
     private static int CIRCLES_DIA = 96;
@@ -136,6 +136,12 @@ public class AssetLoader {
 
         neuropol = new BitmapFont(Gdx.files.internal("fonts/neuropol.fnt"));
         neuropol.setScale(0.25f, -0.25f);
+
+        futura = new BitmapFont(Gdx.files.internal("fonts/futura.fnt"));
+        futura.setScale(0.25f, -0.25f);
+
+        DINcondensed = new BitmapFont(Gdx.files.internal("fonts/DINcondensed.fnt"));
+        DINcondensed.setScale(0.25f, -0.25f);
 		
 
 
