@@ -109,7 +109,7 @@ public class GameRenderer {
 
     public void render(float delta, float runTime) {
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
@@ -358,7 +358,7 @@ public class GameRenderer {
         AssetLoader.font.draw(batcher, "" + myWorld.GAME_SCORE,
                 0, midPointY + 90);
 
-        AssetLoader.font.setScale(0.04f, -0.04f);
+        AssetLoader.whiteFont.setScale(0.04f, -0.04f);
         int length = ("" + myWorld.currPlayState).length();
         AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
                 gameDimensions.x- (6 * length), midPointY + 93);
@@ -393,9 +393,5 @@ public class GameRenderer {
 
 		}
 	}
-
-    public Vector2 getGameDimensions() {
-        return gameDimensions;
-    }
 
 }

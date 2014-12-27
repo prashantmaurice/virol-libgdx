@@ -2,12 +2,9 @@ package com.maurice.virolLibgdx.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Interpolation;
 import com.maurice.virolLibgdx.GameWorld.GameRenderer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.Networking.NetworkManager;
-import com.maurice.virolLibgdx.Transitions.ScreenTransition;
-import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
 import com.maurice.virolLibgdx.ZBHelpers.InputHandler;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 
@@ -69,16 +66,6 @@ public class GameScreen extends AbstractGameScreen{
 	public void dispose() {
 	}
 
-    public void getSettingsMenu(){
-        //game.setScreen(new testtwo(game));
-        //ScreenTransition transition = ScreenTransitionFade.init(0.75f);
-        //game.setScreen(new testtwo(game), transition);
-
-        ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
-                ScreenTransitionSlide.UP, false, Interpolation.sineOut);
-        game.setScreen(new SettingsScreen(game), transition);
-        System.out.println("change screen called");
-    }
     @Override
     public InputProcessor getInputProcessor () {
         System.out.println("GameScreen input processor requested");

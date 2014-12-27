@@ -21,8 +21,6 @@ public class Circle {
 	private float rotation;
     private int value;
     private boolean inBlast = false;
-    private boolean horizontalHinder = false;
-    private boolean verticalHinder = false;
     private int MAXVALUE = 3;
     public boolean leftArrowOn = true;
     public boolean rightArrowOn = true;
@@ -32,10 +30,6 @@ public class Circle {
     public float getBlastRadius() {
         return blastRadius.getValue();
     }
-    public Point getGridPosition() {
-        return gridPosition;
-    }
-
 
     private Value blastRadius = new Value();;
     private TweenManager manager = new TweenManager();
@@ -89,17 +83,16 @@ public class Circle {
 
     public void blastcomplete(){
         value=0;
-        CircleController.getInstance().addCircleValue((int)gridPosition.x+1,(int)gridPosition.y,isOpponent);
-        CircleController.getInstance().addCircleValue((int)gridPosition.x-1,(int) gridPosition.y,isOpponent);
-        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y+1,isOpponent);
-        CircleController.getInstance().addCircleValue((int)gridPosition.x,(int)gridPosition.y-1,isOpponent);
+        CircleController.getInstance().addCircleValue(gridPosition.x+1,gridPosition.y,isOpponent);
+        CircleController.getInstance().addCircleValue(gridPosition.x-1,gridPosition.y,isOpponent);
+        CircleController.getInstance().addCircleValue(gridPosition.x,gridPosition.y+1,isOpponent);
+        CircleController.getInstance().addCircleValue(gridPosition.x,gridPosition.y-1,isOpponent);
     }
 
 
 	public void onClick(boolean byOpponent) {
         Gdx.app.log("CIRCLE", "Clicked circle:"+gridPosition.x+"=="+gridPosition.y);
         addValue(byOpponent);
-
 	}
 
     public void addValue(boolean byOpponent){
@@ -117,27 +110,9 @@ public class Circle {
         }
     }
 
-
-	public void onRestart(int y) {
-		rotation = 0;
-		gridPosition.y = y;
-	}
-
-	public float getX() {
-		return gridPosition.x;
-	}
-
-	public float getY() {
-		return gridPosition.y;
-	}
-
 	public float getRotation() {
 		return rotation;
 	}
-
-    public Point getTileDim() {
-        return tileDim;
-    }
 
     public boolean contains(int screenX, int screenY) {
         if((screenX>actualPosition.x)&(screenX<actualPosition.x+tileDim.x)){
@@ -151,6 +126,7 @@ public class Circle {
     public int getValue() {
         return value;
     }
+
     public int getAbsoluteValue() {
         if(isOpponent) return value*-1;
         else return value;
