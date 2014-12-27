@@ -35,7 +35,10 @@ public class GameRenderer {
 
 
     //DIMENSIONS
-    private Vector2 gameDimensions;
+    private Vector2 gameScreenDim;
+    private Point boardDimensions;
+    private Point tileDimensions;
+    private int circleDia;
 
 
 	private SpriteBatch batcher;
@@ -68,28 +71,30 @@ public class GameRenderer {
 
 	public GameRenderer(GameWorld world) {
 		myWorld = world;
-        gameDimensions = new Vector2(ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
-        myWorld.createBoard((int)gameDimensions.x,(int)(gameDimensions.y-ZBGame.GAME_DASHBOARD_HEIGHT));
+        gameScreenDim = new Vector2(ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
+        boardDimensions = new Point(ZBGame.GAME_WIDTH,ZBGame.GAME_HEIGHT-ZBGame.GAME_DASHBOARD_HEIGHT);
+        tileDimensions = new Point(boardDimensions.x/GameWorld.ROWS, boardDimensions.y/GameWorld.COLUMNS);
+        circleDia = Math.min(tileDimensions.x,tileDimensions.y);
+		midPointY = (int) (gameScreenDim.y/2);
 
-        myWorld.setDimensions(gameDimensions);
-		this.midPointY = (int) (gameDimensions.y/2);
-//		this.menuButtons = ((InputHandler) Gdx.input.getInputProcessor())
-//				.getMenuButtons();
-
-		cam = new OrthographicCamera(gameDimensions.x, gameDimensions.y);
-		cam.setToOrtho(true, gameDimensions.x, gameDimensions.y);
+        //setup render settings
+		cam = new OrthographicCamera(gameScreenDim.x, gameScreenDim.y);
+		cam.setToOrtho(true, gameScreenDim.x, gameScreenDim.y);
 
 		batcher = new SpriteBatch();
 		batcher.setProjectionMatrix(cam.combined);
 		shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setProjectionMatrix(cam.combined);
-
-		initGameObjects();
-		initAssets();
         cam.update();
 
+        //get additional variables from myworld and assets
+		initGameObjects();
+		initAssets();
+
+        //Start Transition
 		transitionColor = new Color();
 		prepareTransition(255, 255, 255, .5f);
+        instance = this;
 	}
     public static GameRenderer getInstance(){
         return instance;
@@ -97,6 +102,7 @@ public class GameRenderer {
 
 	private void initGameObjects() {
         circleController = myWorld.getCircleController();
+        circlesArray = circleController.getCiclesArray();
 	}
 
 	private void initAssets() {
@@ -117,7 +123,11 @@ public class GameRenderer {
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin(ShapeType.Filled);
         shapeRenderer.setColor(28 / 255.0f, 32 / 255.0f, 47 / 255.0f, 1);
-        shapeRenderer.rect(0, 0, gameDimensions.x, gameDimensions.y);
+        shapeRenderer.rect(0, 0, boardDimensions.x, boardDimensions.y);
+        shapeRenderer.setColor(232f / 255.0f, 148f / 255.0f, 38 / 255.0f, 1);
+        shapeRenderer.rect(0, boardDimensions.y-1, gameScreenDim.x, 1);
+        shapeRenderer.setColor(18 / 255.0f, 22 / 255.0f, 37 / 255.0f, 1);
+        shapeRenderer.rect(0, boardDimensions.y, gameScreenDim.x, gameScreenDim.y-boardDimensions.y);
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.set(ShapeType.Line);
         drawTerritory();
@@ -159,10 +169,11 @@ public class GameRenderer {
     private void drawTerritory() {
         int SEGMENTS = 10;
 
-        circlesArray = circleController.getCiclesArray();
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
                 Circle circle_temp = circlesArray[i][j];
+                Point actualPosition = new Point((i*tileDimensions.x)+(tileDimensions.x-circleDia)/2,
+                        (j*tileDimensions.y)+(tileDimensions.y-circleDia)/2);
                 boolean hasLeft = circleController.hasSimilarLeft(i, j);
                 boolean hasRight = circleController.hasSimilarRight(i, j);
                 boolean hasTop = circleController.hasSimilarTop(i, j);
@@ -174,7 +185,7 @@ public class GameRenderer {
                 else if(circlesArray[i][j].isOpponent()){
 
                 }else{
-                    int dia = circle_temp.getCircleDia();
+                    int dia = circleDia;
                     int curve_radius = (int) (dia*Math.sqrt(2)/4);
                     Point x1,c1,c2,x2,x3,c3,x4,c4,x5,c5,x6,c6,x7,c7,x8,c8;
 
@@ -223,22 +234,22 @@ public class GameRenderer {
                         c7 = new Point(dia/4,((dia/2)+curve_radius));
                     }
 
-                    x1.addPoint(circle_temp.getActualPosition());
-                    x2.addPoint(circle_temp.getActualPosition());
-                    x3.addPoint(circle_temp.getActualPosition());
-                    x4.addPoint(circle_temp.getActualPosition());
-                    x5.addPoint(circle_temp.getActualPosition());
-                    x6.addPoint(circle_temp.getActualPosition());
-                    x7.addPoint(circle_temp.getActualPosition());
-                    x8.addPoint(circle_temp.getActualPosition());
-                    c1.addPoint(circle_temp.getActualPosition());
-                    c2.addPoint(circle_temp.getActualPosition());
-                    c3.addPoint(circle_temp.getActualPosition());
-                    c4.addPoint(circle_temp.getActualPosition());
-                    c5.addPoint(circle_temp.getActualPosition());
-                    c6.addPoint(circle_temp.getActualPosition());
-                    c7.addPoint(circle_temp.getActualPosition());
-                    c8.addPoint(circle_temp.getActualPosition());
+                    x1.addPoint(actualPosition);
+                    x2.addPoint(actualPosition);
+                    x3.addPoint(actualPosition);
+                    x4.addPoint(actualPosition);
+                    x5.addPoint(actualPosition);
+                    x6.addPoint(actualPosition);
+                    x7.addPoint(actualPosition);
+                    x8.addPoint(actualPosition);
+                    c1.addPoint(actualPosition);
+                    c2.addPoint(actualPosition);
+                    c3.addPoint(actualPosition);
+                    c4.addPoint(actualPosition);
+                    c5.addPoint(actualPosition);
+                    c6.addPoint(actualPosition);
+                    c7.addPoint(actualPosition);
+                    c8.addPoint(actualPosition);
 
                     //remove corners when fill and final draw
                     if(!(circleController.hasSimilarGeneric(i,j,i-1,j-1)&(hasLeft)&(hasTop)))
@@ -256,7 +267,6 @@ public class GameRenderer {
     }
 
     private void drawCircles(float runTime){
-        circlesArray = circleController.getCiclesArray();
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
                 if(circlesArray[i][j].getValue()==0)batcher.setColor(Color.GRAY);
@@ -266,46 +276,41 @@ public class GameRenderer {
                     batcher.setColor(bluePlayer);
                 }
                 batcher.draw(circleMap[circlesArray[i][j].getValue()],
-                        circlesArray[i][j].getActualPosition().x ,
-                        circlesArray[i][j].getActualPosition().y,
-                        circlesArray[i][j].getCircleDia()/2, circlesArray[i][j].getCircleDia()/2,
-                        circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                        (i*tileDimensions.x)+(tileDimensions.x-circleDia)/2,
+                        (j*tileDimensions.y)+(tileDimensions.y-circleDia)/2,
+                        circleDia/2,circleDia/2,circleDia,circleDia,
                         0.5f, 0.5f, circlesArray[i][j].getRotation());
 
                 //draw blasts
                 if(circlesArray[i][j].inBlast()) {
 
-                    float alpha = 2 * circlesArray[i][j].getBlastRadius() / circlesArray[i][j].getCircleDia();
+                    float alpha = 2 * circlesArray[i][j].getBlastRadius();
                     if (alpha > 1) alpha = 2 - alpha;
                     if(circlesArray[i][j].isOpponent()) batcher.setColor(redPlayer.r, redPlayer.g, redPlayer.b, alpha);
                     else batcher.setColor(bluePlayer.r, bluePlayer.g, bluePlayer.b, alpha);
                     if(circlesArray[i][j].rightArrowOn)
                         batcher.draw(blast1,
-                            circlesArray[i][j].getActualPosition().x + circlesArray[i][j].getBlastRadius(),
-                            circlesArray[i][j].getActualPosition().y,
-                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
-                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                            (i*tileDimensions.x)+(tileDimensions.x-circleDia)/2 + circlesArray[i][j].getBlastRadius()*circleDia,
+                            (j*tileDimensions.y)+(tileDimensions.y-circleDia)/2,
+                            circleDia / 2, circleDia/ 2, circleDia,circleDia,
                             1, 1, 0);
                     if(circlesArray[i][j].bottomArrowOn)
                         batcher.draw(blast1,
-                            circlesArray[i][j].getActualPosition().x,
-                            circlesArray[i][j].getActualPosition().y + circlesArray[i][j].getBlastRadius(),
-                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
-                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                                (i*tileDimensions.x)+(tileDimensions.x-circleDia)/2,
+                                (j*tileDimensions.y)+(tileDimensions.y-circleDia)/2+ circlesArray[i][j].getBlastRadius()*circleDia,
+                                circleDia / 2, circleDia/ 2, circleDia,circleDia,
                             1, 1, 90);
                     if(circlesArray[i][j].leftArrowOn)
                         batcher.draw(blast1,
-                            circlesArray[i][j].getActualPosition().x - circlesArray[i][j].getBlastRadius(),
-                            circlesArray[i][j].getActualPosition().y,
-                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
-                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                                (i*tileDimensions.x)+(tileDimensions.x-circleDia)/2- circlesArray[i][j].getBlastRadius()*circleDia,
+                                (j*tileDimensions.y)+(tileDimensions.y-circleDia)/2,
+                                circleDia / 2, circleDia/ 2, circleDia,circleDia,
                             1, 1, 180);
                     if(circlesArray[i][j].topArrowOn)
                         batcher.draw(blast1,
-                            circlesArray[i][j].getActualPosition().x,
-                            circlesArray[i][j].getActualPosition().y - circlesArray[i][j].getBlastRadius(),
-                            circlesArray[i][j].getCircleDia() / 2, circlesArray[i][j].getCircleDia() / 2,
-                            circlesArray[i][j].getCircleDia(), circlesArray[i][j].getCircleDia(),
+                                (i*tileDimensions.x)+(tileDimensions.x-circleDia)/2,
+                                (j*tileDimensions.y)+(tileDimensions.y-circleDia)/2- circlesArray[i][j].getBlastRadius()*circleDia,
+                                circleDia / 2, circleDia/ 2, circleDia,circleDia,
                             1, 1, 270);
 
                 }
@@ -361,7 +366,7 @@ public class GameRenderer {
         AssetLoader.whiteFont.setScale(0.04f, -0.04f);
         int length = ("" + myWorld.currPlayState).length();
         AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
-                gameDimensions.x- (6 * length), midPointY + 93);
+                gameScreenDim.x- (6 * length), midPointY + 93);
     }
 
 	private void drawHighScore() {
@@ -394,4 +399,15 @@ public class GameRenderer {
 		}
 	}
 
+    public void onclick(int screenX, int screenY) {
+        if(circleController.runningAnimations>0) return;
+        int i= screenX/tileDimensions.x;
+        int j= screenY/tileDimensions.y;
+        if((i>= GameWorld.ROWS)||(j>= GameWorld.COLUMNS)){
+            //clicked on bottom buttons
+            circleController.pauseGame();
+        }
+        circleController.move(i,j);
+
+    }
 }

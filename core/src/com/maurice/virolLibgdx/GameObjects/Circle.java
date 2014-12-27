@@ -13,11 +13,8 @@ import aurelienribon.tweenengine.TweenManager;
 public class Circle {
 
     private Point gridPosition;
-    private Point actualPosition;
-    private Point tileDim;
     private boolean isOpponent = false;
 
-    private int circleDia;
 	private float rotation;
     private int value;
     private boolean inBlast = false;
@@ -31,18 +28,11 @@ public class Circle {
         return blastRadius.getValue();
     }
 
-    private Value blastRadius = new Value();;
+    private Value blastRadius = new Value();//goes from 0 to 1
     private TweenManager manager = new TweenManager();
 
-    public Point getActualPosition() {
-        return actualPosition;
-    }
-
-    public Circle(int x, int y, int dimX,int dimY) {
+    public Circle(int x, int y) {
 		gridPosition = new Point(x, y);
-        tileDim = new Point(dimX, dimY);
-        circleDia = Math.min(dimX,dimY);
-        actualPosition = new Point(x*dimX, y*dimY);
         value=0;
 
         //blast stuff
@@ -66,7 +56,7 @@ public class Circle {
 		// Rotate counterclockwise
         rotation -= 100 * delta*value;
         manager.update(delta);
-        if((inBlast)&&(blastRadius.getValue()==circleDia)){
+        if((inBlast)&&(blastRadius.getValue()==1)){
             inBlast = false;
             blastcomplete();
         }
@@ -76,7 +66,7 @@ public class Circle {
         inBlast=true;
         blastRadius.setValue(0);
         Tween.registerAccessor(Value.class, new ValueAccessor());
-        Tween.to(blastRadius, -1, CircleController.BLAST_TIME).target(circleDia)
+        Tween.to(blastRadius, -1, CircleController.BLAST_TIME).target(1)
                 .ease(TweenEquations.easeOutQuad).start(manager);
 
     }
@@ -114,15 +104,6 @@ public class Circle {
 		return rotation;
 	}
 
-    public boolean contains(int screenX, int screenY) {
-        if((screenX>actualPosition.x)&(screenX<actualPosition.x+tileDim.x)){
-            if((screenY>actualPosition.y)&(screenY<actualPosition.y+tileDim.y)){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public int getValue() {
         return value;
     }
@@ -148,7 +129,8 @@ public class Circle {
         return false;
     }
 
-    public int getCircleDia() {
-        return circleDia;
+    public void reset() {
+        value=0;
+        blastRadius.setValue(0);
     }
 }

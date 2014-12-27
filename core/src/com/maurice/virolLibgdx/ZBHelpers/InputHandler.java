@@ -2,6 +2,7 @@ package com.maurice.virolLibgdx.ZBHelpers;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.maurice.virolLibgdx.GameWorld.GameRenderer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.ui.SimpleButton;
 
@@ -54,7 +55,7 @@ public class InputHandler implements InputProcessor {
 //            myWorld.isMenu();
 //			myWorld.start();
 		} else if (myWorld.isRunning()) {
-            myWorld.getCircleController().onclick(screenX,screenY);
+            GameRenderer.getInstance().onclick(screenX,screenY);
 		} else if (myWorld.isGameOver()) {
             myWorld.restart();
         }
@@ -94,9 +95,9 @@ public class InputHandler implements InputProcessor {
 			}
 
 
-			if (myWorld.isGameOver() || myWorld.isHighScore()) {
-				myWorld.restart();
-			}
+//			if (myWorld.isGameOver() || myWorld.isHighScore()) {
+//				myWorld.restart();
+//			}
 
 		}
 

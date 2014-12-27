@@ -22,7 +22,6 @@ public class GameScreen extends AbstractGameScreen{
         this.game = zbgame;
         this.world = zbgame.world;
         renderer = new GameRenderer(world);
-        world.setRenderer(renderer);
 
         int screenWidth = Gdx.graphics.getWidth();
         int screenHeight = Gdx.graphics.getHeight();

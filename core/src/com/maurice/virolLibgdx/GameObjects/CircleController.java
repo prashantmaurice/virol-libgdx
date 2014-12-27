@@ -16,6 +16,10 @@ public class CircleController {
     public Circle[][] getCiclesArray() {
         return ciclesArray;
     }
+    public void setCiclesArray(Circle[][] array) {
+        ciclesArray= array;
+        System.out.println("GW set new circles array");
+    }
 
     private Circle[][] ciclesArray;
     private int ROWS;
@@ -25,6 +29,7 @@ public class CircleController {
 		this.ROWS = x;
 		this.COLUMNS = y;
         instance=this;
+        createBoard();
 	}
     public static CircleController getInstance(){
         return instance;
@@ -37,15 +42,20 @@ public class CircleController {
         ciclesArray[x][y].addValue(isOpponent);
     }
     public void restart(){
-        createBoard(ROWS,COLUMNS);
+        for(int i=0;i<GameWorld.ROWS;i++){
+            for(int j=0;j<GameWorld.COLUMNS;j++){
+                ciclesArray[i][j].reset();
+            }
+        }
     }
-    public void createBoard(int boardX,int boardY){
+    public void createBoard(){
         ciclesArray = new Circle[GameWorld.ROWS][GameWorld.COLUMNS];
         for(int i=0;i<GameWorld.ROWS;i++){
             for(int j=0;j<GameWorld.COLUMNS;j++){
-                ciclesArray[i][j] = new Circle(i,j,boardX/ROWS,boardY/COLUMNS);
+                ciclesArray[i][j] = new Circle(i,j);
             }
         }
+        System.out.println("GW created new circles array");
     }
 
 	public void update(float delta) {
@@ -73,16 +83,8 @@ public class CircleController {
         }
     }
 
-    public void onclick(int screenX, int screenY) {
-        if(runningAnimations>0) return;
-        for(int i=0;i<GameWorld.ROWS;i++){
-            for(int j=0;j<GameWorld.COLUMNS;j++){
-                if(ciclesArray[i][j].contains(screenX,screenY)){
-                    move(i,j);
-                    return;
-                };
-            }
-        }
+    public void pauseGame(){
+        GameWorld.getInstance().pausePlayerGame();
     }
     public void proceedNextMove(){
         isCurrMoveOpponent = !isCurrMoveOpponent;

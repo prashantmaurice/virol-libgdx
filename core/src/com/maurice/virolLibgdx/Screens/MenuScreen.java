@@ -52,6 +52,7 @@ public class MenuScreen extends AbstractGameScreen{
     private TextButton buttonPlayMulti = new TextButton("Multi Player", skin);
     private TextButton buttonAbout = new TextButton("About Developer", skin);
     private TextButton buttonExit = new TextButton("Exit", skin);
+    private TextButton buttonResume = new TextButton("Resume", skin);
 
 	// This is the constructor, not the class declaration
 	public MenuScreen(ZBGame zbgame) {
@@ -149,6 +150,13 @@ public class MenuScreen extends AbstractGameScreen{
                 // or System.exit(0);
             }
         });
+        buttonResume.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button SinglePlayer clicked");
+                GameWorld.getInstance().resumeGame();
+            }
+        });
 
 
         buttonPlaySingle.setColor(UIColors.MENU_BUTTON);
@@ -179,6 +187,10 @@ public class MenuScreen extends AbstractGameScreen{
         table.add(buttonPlaySingle).padTop(screenHeight / 3).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.add(buttonPlayMulti).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.add(buttonAbout).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
+        if((GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_SINGLE)||
+                (GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_MULTI)){
+            table.add(buttonResume).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
+        }
         table.add(buttonExit).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.setFillParent(true);
         stage.addActor(table);
