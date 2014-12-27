@@ -47,8 +47,8 @@ public class InputHandler implements InputProcessor {
         System.out.println("TouchDown...!"+myWorld.isMenu()+""+myWorld.isReady()+""+myWorld.isRunning()+""+myWorld.isGameOver());
 		if (myWorld.isMenu()) {
 			//playButton.isTouchDown(screenX, screenY);
-			myWorld.ready();
-            myWorld.start();
+//			myWorld.ready();
+//            myWorld.start();
 		} else if (myWorld.isReady()) {
 //            gameScreen.getSettingsMenu();
 //            myWorld.isMenu();

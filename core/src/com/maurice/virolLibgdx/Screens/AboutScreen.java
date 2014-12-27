@@ -26,7 +26,7 @@ import com.maurice.virolLibgdx.ZBHelpers.InputHandler;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.UIColors;
 
-public class MenuScreen extends AbstractGameScreen{
+public class AboutScreen extends AbstractGameScreen{
 
 	private GameWorld world;
 	private GameRenderer renderer;
@@ -54,7 +54,7 @@ public class MenuScreen extends AbstractGameScreen{
     private TextButton buttonExit = new TextButton("Exit", skin);
 
 	// This is the constructor, not the class declaration
-	public MenuScreen(ZBGame zbgame) {
+	public AboutScreen(ZBGame zbgame) {
         super(zbgame);
         this.game = zbgame;
 		screenWidth = Gdx.graphics.getWidth();
@@ -132,15 +132,6 @@ public class MenuScreen extends AbstractGameScreen{
                 System.out.println("Button MultiPlayer clicked");
             }
         });
-        buttonAbout.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button About clicked");
-                ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
-                        ScreenTransitionSlide.LEFT, false, Interpolation.sineOut);
-                game.setScreen(new AboutScreen(game),transition);
-            }
-        });
         buttonExit.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -149,7 +140,6 @@ public class MenuScreen extends AbstractGameScreen{
                 // or System.exit(0);
             }
         });
-
 
         buttonPlaySingle.setColor(UIColors.MENU_BUTTON);
         buttonPlaySingle.pad(30).setWidth(screenWidth / 2);
@@ -176,9 +166,6 @@ public class MenuScreen extends AbstractGameScreen{
         int buttonHeight = 100;
         int buttonWidth = (int) (screenWidth*0.8f);
 
-        table.add(buttonPlaySingle).padTop(screenHeight / 3).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-        table.add(buttonPlayMulti).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-        table.add(buttonAbout).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
         table.add(buttonExit).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.setFillParent(true);
         stage.addActor(table);

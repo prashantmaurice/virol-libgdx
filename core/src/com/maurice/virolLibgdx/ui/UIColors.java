@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.Color;
 /**
  * Created by maurice on 27/12/14.
  */
-public class UIVariables {
+public class UIColors {
 
     //MENU SCREEN
-    public static Color CLR_MENU_DARKBLUE = colorFromInt(28, 34, 69, 1);
-    public static Color CLR_MENU_LIGHTBLUE_LINE = colorFromInt(103, 158, 232, 1);
-    public static Color CLR_MENU_WHITE = colorFromInt(255, 255, 255, 1);
-    public static Color CLR_MENU_BUTTON = colorFromInt(65, 159, 255, 1);
+    public static Color MENU_DARKBLUE = colorFromInt(28, 34, 69, 1);
+    public static Color MENU_LIGHTBLUE_LINE = colorFromInt(103, 158, 232, 1);
+    public static Color MENU_WHITE = colorFromInt(255, 255, 255, 1);
+    public static Color MENU_BUTTON = colorFromInt(65, 159, 255, 1);
 
 
 

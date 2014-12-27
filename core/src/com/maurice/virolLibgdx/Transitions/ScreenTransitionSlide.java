@@ -30,28 +30,28 @@ public class ScreenTransitionSlide implements ScreenTransition {
         return duration;
     }
     @Override
-    public void render (SpriteBatch batch, Texture currScreen, Texture nextScreen, float alpha) {
+    public void render (SpriteBatch batch, Texture currScreen, Texture nextScreen, float transition) {
         float w = currScreen.getWidth();
         float h = currScreen.getHeight();
         float x = 0;
         float y = 0;
-        if (easing != null) alpha = easing.apply(alpha);
+        if (easing != null) transition = easing.apply(transition);
         // calculate position offset
         switch (direction) {
             case LEFT:
-                x = -w * alpha;
+                x = -w * transition;
                 if (!slideOut) x += w;
                 break;
             case RIGHT:
-                x = w * alpha;
+                x = w * transition;
                 if (!slideOut) x -= w;
                 break;
             case UP:
-                y = h * alpha;
+                y = h * transition;
                 if (!slideOut) y -= h;
                 break;
             case DOWN:
-                y = -h * alpha;
+                y = -h * transition;
                 if (!slideOut) y += h;
                 break;
         }
@@ -67,8 +67,12 @@ public class ScreenTransitionSlide implements ScreenTransition {
         //currScreen.getWidth(), currScreen.getHeight(),false, true);
         switch (direction){
             case LEFT:
+                batch.draw(texBottom, -w+x, y, 0, 0, w, h, 1, 1, 0, 0, 0,
+                        currScreen.getWidth(), currScreen.getHeight(),false, true);
                 break;
             case RIGHT:
+                batch.draw(texBottom, w+x, y, 0, 0, w, h, 1, 1, 0, 0, 0,
+                        currScreen.getWidth(), currScreen.getHeight(),false, true);
                 break;
             case UP:
                 batch.draw(texBottom, x, h+y, 0, 0, w, h, 1, 1, 0, 0, 0,
@@ -77,12 +81,15 @@ public class ScreenTransitionSlide implements ScreenTransition {
             case DOWN:
                 batch.draw(texBottom, x, -h+y, 0, 0, w, h, 1, 1, 0, 0, 0,
                         currScreen.getWidth(), currScreen.getHeight(),false, true);
+
                 break;
 
         }
-        //System.out.println("x="+x+"y="+y+"w="+w+"h="+h);
         batch.draw(texTop, x, y, 0, 0, w, h, 1, 1, 0, 0, 0,
                 nextScreen.getWidth(), nextScreen.getHeight(),false, true);
+        //System.out.println("x="+x+"y="+y+"w="+w+"h="+h);
+
+
         batch.end();
     }
 }
