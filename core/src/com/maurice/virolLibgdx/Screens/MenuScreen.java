@@ -122,14 +122,14 @@ public class MenuScreen extends AbstractGameScreen{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Button SinglePlayer clicked");
-                GameWorld.getInstance().ready();
-                GameWorld.getInstance().start();
+                GameWorld.getInstance().startSinglePlayerGame();
             }
         });
         buttonPlayMulti.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Button MultiPlayer clicked");
+                GameWorld.getInstance().startMultiPlayerGame();
             }
         });
         buttonAbout.addListener(new ClickListener() {

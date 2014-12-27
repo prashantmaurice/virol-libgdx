@@ -43,7 +43,7 @@ public class GameWorld {
     }
 
     public enum PlayMode {
-        SINGLEPLAYER, ONLINE, PAUSE
+        SINGLEPLAYER, ONLINE, PAUSE, MULTIPLAYER
     }
     public enum GameState {
 		MENU, READY, RUNNING, GAMEOVER, HIGHSCORE
@@ -134,7 +134,16 @@ public class GameWorld {
 		score += increment;
 	}
 
-
+    public void startSinglePlayerGame(){
+        currPlayMode = PlayMode.SINGLEPLAYER;
+        ready();
+        start();
+    }
+    public void startMultiPlayerGame(){
+        currPlayMode = PlayMode.MULTIPLAYER;
+        ready();
+        start();
+    }
     public void menu() {
         currentState = GameState.MENU;
         game.setScreen(new MenuScreen(game));

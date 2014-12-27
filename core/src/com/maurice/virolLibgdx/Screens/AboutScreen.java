@@ -148,8 +148,8 @@ public class AboutScreen extends AbstractGameScreen{
         int padBottom = 20;
         int buttonHeight = 100;
         int buttonWidth = (int) (screenWidth*0.8f);
-        table.add(title).align(Align.right).padRight(10).size(screenWidth, screenHeight - buttonHeight).row();
-        table.add(buttonBack).size(buttonWidth, buttonHeight).row();
+        table.add(title).align(Align.right).padRight(30).size(screenWidth, screenHeight - buttonHeight-padBottom).row();
+        table.add(buttonBack).size(buttonWidth, buttonHeight).padBottom(padBottom).row();
         table.setFillParent(true);
         stage.addActor(table);
 //        stage.addActor(textArea);
