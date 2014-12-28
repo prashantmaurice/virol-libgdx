@@ -173,9 +173,7 @@ public class AssetLoader {
 		dead.dispose();
 		blast.dispose();
 		coin.dispose();
-
 		font.dispose();
-		shadow.dispose();
 	}
 
 }

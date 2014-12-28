@@ -188,7 +188,7 @@ public class SettingsScreen extends AbstractGameScreen {
     }
     @Override
     public InputProcessor getInputProcessor () {
-        System.out.println("input processor 1 requested");
+        System.out.println("Settings input processor requested");
         return stage;
     }
     public void getMainGame(){
@@ -197,9 +197,9 @@ public class SettingsScreen extends AbstractGameScreen {
         //game.setScreen(new testtwo(game), transition);
 
         ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
-                ScreenTransitionSlide.DOWN, false, Interpolation.sineOut);
-        game.setScreen(new GameScreen(game), transition);
-        System.out.println("gamescreen called");
+                ScreenTransitionSlide.LEFT, false, Interpolation.sineOut);
+        game.setScreen(new MenuScreen(game), transition);
+        System.out.println("Menu Screen called");
     }
     private Color colorFromHex(long hex){
         float a = (hex & 0xFF000000L) >> 24;

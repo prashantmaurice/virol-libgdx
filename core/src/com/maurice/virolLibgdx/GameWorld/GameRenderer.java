@@ -131,13 +131,10 @@ public class GameRenderer {
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.set(ShapeType.Line);
         drawTerritory();
-//        shapeRenderer.arc(50,50,25,0,90);
-
         shapeRenderer.end();
 
 
         batcher.begin();
-
 //        enable this to set background
 //        batcher.disableBlending();
 //        batcher.draw(bg, 0, midPointY + 23, 136, 43);
@@ -316,7 +313,8 @@ public class GameRenderer {
                 }
             }
         }
-        drawDebug();
+//        drawDebug();
+        drawBottom();
 
     }
 
@@ -331,7 +329,7 @@ public class GameRenderer {
 		//batcher.draw(ready, 136/2-28, midPointY - 50, 57, 14);
 		AssetLoader.helvetica.setScale(0.06f, -0.06f);
 		AssetLoader.helvetica.draw(batcher, "TAP TO START",
-				34, midPointY - 70);
+				44, midPointY - 70);
 	}
 
 	private void drawGameOver() {
@@ -354,6 +352,29 @@ public class GameRenderer {
 		AssetLoader.whiteFont.draw(batcher, "" + myWorld.getScore(),
 				68 - (3 * length), midPointY - 90);
 	}
+    private void drawBottom(){
+        AssetLoader.font.setColor(whiteText);
+        AssetLoader.font.setScale(0.06f, -0.06f);
+        AssetLoader.font.draw(batcher, "TAP TO PAUSE",
+                boardDimensions.x/2-20, midPointY + 98);
+
+        AssetLoader.font.setScale(0.06f, -0.06f);
+        String text = "";
+        for(int i=0;i<myWorld.GAME_SCORE/10;i++){
+            text+="-";
+        }
+        if(myWorld.GAME_SCORE>0){
+            AssetLoader.font.setColor(redPlayer);
+            AssetLoader.font.draw(batcher, text,
+                0, midPointY + 90);
+        }else{
+            AssetLoader.font.setColor(redPlayer);
+            AssetLoader.font.draw(batcher, text,
+                    0, midPointY + 90);
+        }
+
+
+    }
 
     private void drawDebug(){
 
