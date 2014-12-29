@@ -108,7 +108,13 @@ public class AI {
         return NewcirclesArrayInt;
     }
     private static void addValue(Integer[][] NewcirclesArrayInt,Point move, boolean isOpponent){
-
+        int MAXVALUE = 3;
+        if((move.x==GameWorld.ROWS-1)||(move.x==0)) {
+            MAXVALUE--;
+        }
+        if((move.y==GameWorld.COLUMNS-1)||(move.y==0)) {
+            MAXVALUE--;
+        }
 
 
 
@@ -120,13 +126,14 @@ public class AI {
             }else{
                 NewcirclesArrayInt[move.x][move.y]++;
             }
-        }else if(NewcirclesArrayInt[move.x][move.y]==3){
+
+        }else if(NewcirclesArrayInt[move.x][move.y]==MAXVALUE){
             NewcirclesArrayInt[move.x][move.y]=0;
             addValue(NewcirclesArrayInt,new Point(move.x+1,move.y),isOpponent);
             addValue(NewcirclesArrayInt,new Point(move.x-1,move.y),isOpponent);
             addValue(NewcirclesArrayInt,new Point(move.x,move.y+1),isOpponent);
             addValue(NewcirclesArrayInt,new Point(move.x,move.y-1),isOpponent);
-        }else if(NewcirclesArrayInt[move.x][move.y]==-3){
+        }else if(NewcirclesArrayInt[move.x][move.y]==-MAXVALUE){
             NewcirclesArrayInt[move.x][move.y]=0;
             addValue(NewcirclesArrayInt,new Point(move.x+1,move.y),isOpponent);
             addValue(NewcirclesArrayInt,new Point(move.x-1,move.y),isOpponent);

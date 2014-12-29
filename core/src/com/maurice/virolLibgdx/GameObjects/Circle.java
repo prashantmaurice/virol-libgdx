@@ -130,6 +130,7 @@ public class Circle {
     }
 
     public void reset() {
+        inBlast = false;
         value=0;
         blastRadius.setValue(0);
     }

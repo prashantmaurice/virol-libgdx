@@ -187,9 +187,9 @@ public class GameRenderer {
                     Point x1,c1,c2,x2,x3,c3,x4,c4,x5,c5,x6,c6,x7,c7,x8,c8;
 
                     if(hasLeft){
-                        x1 = new Point(0,curve_radius);
+                        x1 = new Point(-1,curve_radius);
                         c1 = new Point(dia/4,curve_radius);
-                        x8 = new Point(0,dia-curve_radius);
+                        x8 = new Point(-1,dia-curve_radius);
                         c8 = new Point(dia/4,dia-curve_radius);
                     }else{
                         x1 = new Point(((dia/2)-curve_radius),dia/2);
