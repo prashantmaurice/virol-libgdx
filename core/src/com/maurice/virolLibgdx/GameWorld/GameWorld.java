@@ -26,7 +26,7 @@ public class GameWorld {
     public static int ROWS = 4;
     public static int COLUMNS = 6;
     public boolean LAST_WON_OPPONENT = false;
-    public float GAME_SCORE=0;
+    public static float GAME_SCORE=0;
     public static PlayState currPlayState = PlayState.PLAYER;
     public static PlayMode currPlayMode = PlayMode.SINGLEPLAYER;
     public static OnlineState currOnlineState = OnlineState.DISCONNECTED;
@@ -76,22 +76,22 @@ public class GameWorld {
 	}
 
     private void checkForAI(){
-        if(currPlayMode==PlayMode.SINGLEPLAYER){
-            if(currPlayState==PlayState.OPPONENT){
+        if(currPlayMode==PlayMode.SINGLEPLAYER) {
+            if (currPlayState == PlayState.OPPONENT) {
                 Timer.Task task = new Timer.Task() {
                     @Override
                     public void run() {
                         System.out.println("AI Checked For AI");
-                        AIMoveRequested=true;
+                        AIMoveRequested = true;
                         Point nextMove = AI.getNextMove(circleController);
                         GAME_SCORE = AI.calculateScore(circleController);
-                        circleController.move(nextMove.x,nextMove.y);
-                        AIMoveRequested=false;
+                        circleController.move(nextMove.x, nextMove.y);
+                        AIMoveRequested = false;
                     }
                 };
-                if(!AIMoveRequested){
+                if (!AIMoveRequested) {
                     Timer y = new Timer();
-                    y.scheduleTask(task,0);
+                    y.scheduleTask(task, 0);
                 }
             }
         }
@@ -236,7 +236,7 @@ public class GameWorld {
 	}
 
     public void sendMoveServer(int i, int j) {
-        if(GameWorld.getInstance().currPlayState== GameWorld.PlayState.PLAYER){
+        if(GameWorld.currPlayState== GameWorld.PlayState.PLAYER){
             networkManager.setMoveServer(i,j);
         }
     }

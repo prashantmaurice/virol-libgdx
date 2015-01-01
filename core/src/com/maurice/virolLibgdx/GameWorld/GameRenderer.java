@@ -18,6 +18,7 @@ import com.maurice.virolLibgdx.TweenAccessors.ValueAccessor;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.SimpleButton;
+import com.maurice.virolLibgdx.ui.UIColors;
 
 import java.util.List;
 
@@ -63,10 +64,10 @@ public class GameRenderer {
 	private Color transitionColor;
 
     //colors
-    private Color bluePlayer = new Color(51f / 255f, 181f / 255f, 229f / 255f, 1);
-    private Color redPlayer = new Color(226f / 255f, 82f / 255f, 82f / 255f, 1);
-    private Color greenText = new Color(122f / 255f, 255f / 255f, 122f / 255f, 1);
-    private Color whiteText = new Color(255f / 255f, 255f / 255f, 255f / 255f, 1);
+    private Color bluePlayer = UIColors.GAME_PLAYER_BLUE;
+    private Color redPlayer = UIColors.GAME_PLAYER_RED;
+    private Color greenText = UIColors.GREEN;
+    private Color whiteText = UIColors.WHITE;
 
 
 	public GameRenderer(GameWorld world) {
@@ -122,11 +123,16 @@ public class GameRenderer {
         // Draw Background color
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin(ShapeType.Filled);
-        shapeRenderer.setColor(28 / 255.0f, 32 / 255.0f, 47 / 255.0f, 1);
+        shapeRenderer.setColor(UIColors.GAME_BG);
         shapeRenderer.rect(0, 0, boardDimensions.x, boardDimensions.y);
-        shapeRenderer.setColor(232f / 255.0f, 148f / 255.0f, 38 / 255.0f, 1);
+        if(GameWorld.currPlayState== GameWorld.PlayState.PLAYER)
+            shapeRenderer.setColor(UIColors.GAME_PLAYER_BLUE);
+        else if(GameWorld.currPlayState== GameWorld.PlayState.OPPONENT)
+            shapeRenderer.setColor(UIColors.GAME_PLAYER_RED);
+        else
+            shapeRenderer.setColor(UIColors.GAME_ANIM_LINE_COLOR);
         shapeRenderer.rect(0, boardDimensions.y-1, gameScreenDim.x, 1);
-        shapeRenderer.setColor(18 / 255.0f, 22 / 255.0f, 37 / 255.0f, 1);
+        shapeRenderer.setColor(UIColors.GAME_BG_BOTTOM);
         shapeRenderer.rect(0, boardDimensions.y, gameScreenDim.x, gameScreenDim.y-boardDimensions.y);
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.set(ShapeType.Line);
@@ -149,6 +155,7 @@ public class GameRenderer {
         } else if (myWorld.isMenu()) {
         } else if (myWorld.isGameOver()) {
             drawCircles(runTime);
+//            drawBottom();
             drawGameOver();
             drawRetry();
         } else if (myWorld.isHighScore()) {
@@ -314,6 +321,7 @@ public class GameRenderer {
             }
         }
 //        drawDebug();
+
         drawBottom();
 
     }
@@ -353,24 +361,35 @@ public class GameRenderer {
 				68 - (3 * length), midPointY - 90);
 	}
     private void drawBottom(){
-        AssetLoader.font.setColor(whiteText);
-        AssetLoader.font.setScale(0.06f, -0.06f);
-        AssetLoader.font.draw(batcher, "TAP TO PAUSE",
-                boardDimensions.x/2-20, midPointY + 98);
+        String text2 = "TAP TO PAUSE";
+        if((GameWorld.currPlayMode == GameWorld.PlayMode.ONLINE)||(GameWorld.currPlayMode == GameWorld.PlayMode.MULTIPLAYER)){
+            if(GameWorld.currPlayState== GameWorld.PlayState.PLAYER)
+                text2 = "YOUR MOVE";
+            else if(GameWorld.currPlayState== GameWorld.PlayState.OPPONENT)
+                text2 = "OPPONENTS MOVE";
+        }
 
-        AssetLoader.font.setScale(0.06f, -0.06f);
+        AssetLoader.whiteFont.setColor(whiteText);
+        AssetLoader.whiteFont.setScale(0.03f*ZBGame.FONT_SCALE, -0.03f*ZBGame.FONT_SCALE);
+        AssetLoader.whiteFont.draw(batcher, text2,
+                boardDimensions.x/2-(text2.length()*4), midPointY + 98);
+        AssetLoader.whiteFont.draw(batcher, ""+GameWorld.GAME_SCORE,
+                10, midPointY + 80);
+
+
+        AssetLoader.whiteFont.setScale(0.04f*ZBGame.FONT_SCALE, -0.04f*ZBGame.FONT_SCALE);
         String text = "";
-        for(int i=0;i<myWorld.GAME_SCORE/10;i++){
+        for(int i=0;i<GameWorld.GAME_SCORE/10;i++){
             text+="-";
         }
-        if(myWorld.GAME_SCORE>0){
-            AssetLoader.font.setColor(redPlayer);
-            AssetLoader.font.draw(batcher, text,
-                0, midPointY + 90);
+        if(GameWorld.GAME_SCORE>0){
+            AssetLoader.whiteFont.setColor(whiteText);
+            AssetLoader.whiteFont.draw(batcher, text,
+                boardDimensions.x/2, midPointY + 84);
         }else{
-            AssetLoader.font.setColor(redPlayer);
-            AssetLoader.font.draw(batcher, text,
-                    0, midPointY + 90);
+            AssetLoader.whiteFont.setColor(redPlayer);
+            AssetLoader.whiteFont.draw(batcher, text,
+                boardDimensions.x/2, midPointY + 84);
         }
 
 
@@ -381,12 +400,12 @@ public class GameRenderer {
         AssetLoader.font.setColor(whiteText);
         AssetLoader.font.setScale(0.06f, -0.06f);
 
-        AssetLoader.font.draw(batcher, "" + myWorld.GAME_SCORE,
+        AssetLoader.font.draw(batcher, "" + GameWorld.GAME_SCORE,
                 0, midPointY + 90);
 
         AssetLoader.whiteFont.setScale(0.04f, -0.04f);
-        int length = ("" + myWorld.currPlayState).length();
-        AssetLoader.font.draw(batcher, ""+myWorld.currPlayState,
+        int length = ("" + GameWorld.currPlayState).length();
+        AssetLoader.font.draw(batcher, ""+GameWorld.currPlayState,
                 gameScreenDim.x- (6 * length), midPointY + 93);
     }
 

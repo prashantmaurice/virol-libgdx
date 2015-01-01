@@ -2,6 +2,7 @@ package com.maurice.virolLibgdx.GameObjects;
 
 import com.badlogic.gdx.utils.Timer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
+import com.maurice.virolLibgdx.OpponentIntelligence.AI;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 
 public class CircleController {
@@ -71,10 +72,10 @@ public class CircleController {
         if((i>=GameWorld.ROWS)||(i<0)) return;
         if((j>=GameWorld.COLUMNS)||(j<0)) return;
         if(ciclesArray[i][j].isValid()){
-            if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.PLAYER){
+            if(GameWorld.currPlayState == GameWorld.PlayState.PLAYER){
                 changePlayState(GameWorld.PlayState.ANIM_PLAYER);
                 ciclesArray[i][j].onClick(false);
-            }else if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.OPPONENT){
+            }else if(GameWorld.currPlayState == GameWorld.PlayState.OPPONENT){
                 changePlayState(GameWorld.PlayState.ANIM_OPPONENT);
                 ciclesArray[i][j].onClick(true);
             }
@@ -91,11 +92,12 @@ public class CircleController {
             public void run() {
                 runningAnimations--;
                 if(runningAnimations==0){
-                    if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_PLAYER){
+                    if(GameWorld.currPlayState == GameWorld.PlayState.ANIM_PLAYER){
                         changePlayState(GameWorld.PlayState.OPPONENT);
-                    }else if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_OPPONENT){
+                    }else if(GameWorld.currPlayState == GameWorld.PlayState.ANIM_OPPONENT){
                         changePlayState(GameWorld.PlayState.PLAYER);
                     }
+                    GameWorld.GAME_SCORE = AI.calculateScore(instance);
                 }
             }
         };
@@ -109,11 +111,12 @@ public class CircleController {
             public void run() {
                 runningAnimations--;
                 if(runningAnimations==0){
-                    if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_PLAYER){
+                    if(GameWorld.currPlayState == GameWorld.PlayState.ANIM_PLAYER){
                         changePlayState(GameWorld.PlayState.OPPONENT);
-                    }else if(GameWorld.getInstance().currPlayState == GameWorld.PlayState.ANIM_OPPONENT){
+                    }else if(GameWorld.currPlayState == GameWorld.PlayState.ANIM_OPPONENT){
                         changePlayState(GameWorld.PlayState.PLAYER);
                     }
+                    GameWorld.GAME_SCORE = AI.calculateScore(instance);
                 }
             }
         };
@@ -153,7 +156,7 @@ public class CircleController {
 
     private void changePlayState(GameWorld.PlayState state){
         System.out.println("PLAYSTATE: changed to "+state);
-        GameWorld.getInstance().currPlayState = state;
+        GameWorld.currPlayState = state;
     }
     public boolean hasSimilarGeneric(int i, int j,int x, int y) {
         if(!validPoint(i,j)) return false;

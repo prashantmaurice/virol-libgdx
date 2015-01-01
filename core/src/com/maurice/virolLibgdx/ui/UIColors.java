@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.Color;
  * Created by maurice on 27/12/14.
  */
 public class UIColors {
+    //GENERIC
+    public static Color WHITE = colorFromInt(255, 255, 255, 1);
+    public static Color GREEN = colorFromInt(122, 255, 122, 1);
+
 
     //MENU SCREEN
     public static Color MENU_DARKBLUE = colorFromInt(28, 34, 69, 1);
@@ -15,6 +19,13 @@ public class UIColors {
 
     //ABOUT ME
     public static Color ABOUT_BG = colorFromInt(27, 60, 100, 1);
+
+    //MAIN GAME SCREEN
+    public static Color GAME_BG = colorFromInt(28, 32, 47, 1);
+    public static Color GAME_BG_BOTTOM = colorFromInt(18, 22, 37, 1);
+    public static Color GAME_PLAYER_BLUE = colorFromInt(51, 181, 229, 1);
+    public static Color GAME_PLAYER_RED = colorFromInt(226, 82, 82, 1);
+    public static Color GAME_ANIM_LINE_COLOR = Color.GRAY;
 
 
 
