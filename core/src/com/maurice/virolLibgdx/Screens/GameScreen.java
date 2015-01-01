@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.maurice.virolLibgdx.GameWorld.GameRenderer;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
-import com.maurice.virolLibgdx.Networking.NetworkManager;
 import com.maurice.virolLibgdx.ZBHelpers.InputHandler;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 
@@ -31,7 +30,6 @@ public class GameScreen extends AbstractGameScreen{
         Gdx.input.setInputProcessor(inputHandler);
         System.out.println("setInputProcessor screenWidth");
 
-        NetworkManager networkManager = new NetworkManager();
 	}
 
 	@Override

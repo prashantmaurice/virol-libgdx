@@ -1,0 +1,111 @@
+package com.maurice.virolLibgdx.Screens;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.maurice.virolLibgdx.GameWorld.GameWorld;
+import com.maurice.virolLibgdx.TweenAccessors.SpriteAccessor;
+import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
+import com.maurice.virolLibgdx.ZombieBird.ZBGame;
+
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenEquations;
+import aurelienribon.tweenengine.TweenManager;
+
+
+public class MultiWaitingScreen extends AbstractGameScreen{
+
+    private TweenManager manager;
+    private SpriteBatch batcher;
+    private Sprite sprite;
+    private ZBGame game;
+
+    public MultiWaitingScreen(ZBGame game) {
+        super(game);
+        this.game = game;
+        batcher = new SpriteBatch();
+    }
+
+    @Override
+    public void show() {
+        sprite = new Sprite(AssetLoader.logo);
+        sprite.setColor(1, 1, 1, 0);
+
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        float desiredWidth = width * .7f;
+        float scale = desiredWidth / sprite.getWidth();
+
+        sprite.setSize(sprite.getWidth() * scale, sprite.getHeight() * scale);
+        sprite.setPosition((width / 2) - (sprite.getWidth() / 2), (height / 2)
+                - (sprite.getHeight() / 2));
+//        setupTween();
+
+    }
+
+    private void setupTween() {
+        Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+        manager = new TweenManager();
+
+        TweenCallback cb = new TweenCallback() {
+            @Override
+            public void onEvent(int type, BaseTween<?> source) {
+                game.world.menu();
+            }
+        };
+
+        Tween.to(sprite, SpriteAccessor.ALPHA, .8f).target(1)
+                .ease(TweenEquations.easeInOutQuad).repeatYoyo(1, .4f)
+                .setCallback(cb).setCallbackTriggers(TweenCallback.COMPLETE)
+                .start(manager);
+    }
+
+    @Override
+    public void render(float delta) {
+//        manager.update(delta);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batcher.begin();
+        batcher.enableBlending();
+        AssetLoader.whiteFont.setColor(Color.BLACK);
+        AssetLoader.whiteFont.setScale(0.06f, -0.06f);
+        AssetLoader.whiteFont.draw(batcher, ""+GameWorld.currOnlineState,
+                34, Gdx.graphics.getHeight()/2 + 90);
+//        sprite.draw(batcher);
+        batcher.end();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void hide() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void pause() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void resume() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void dispose() {
+        // TODO Auto-generated method stub
+
+    }
+
+}

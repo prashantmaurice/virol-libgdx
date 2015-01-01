@@ -50,6 +50,7 @@ public class MenuScreen extends AbstractGameScreen{
     private Image logoImage = new Image(AssetLoader.virollogo);
     private TextButton buttonPlaySingle = new TextButton("Single Player", skin);
     private TextButton buttonPlayMulti = new TextButton("Multi Player", skin);
+    private TextButton buttonPlayOnline = new TextButton("Play Online", skin);
     private TextButton buttonAbout = new TextButton("About Developer", skin);
     private TextButton buttonSettings = new TextButton("Settings", skin);
     private TextButton buttonResume = new TextButton("Resume", skin);
@@ -133,6 +134,13 @@ public class MenuScreen extends AbstractGameScreen{
                 GameWorld.getInstance().startMultiPlayerGame();
             }
         });
+        buttonPlayOnline.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button Online Game clicked");
+                GameWorld.getInstance().startOnlineGameConnection();
+            }
+        });
         buttonAbout.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -159,15 +167,21 @@ public class MenuScreen extends AbstractGameScreen{
             }
         });
 
+        TextButton.TextButtonStyle buttonStyle = buttonPlaySingle.getStyle();
+        AssetLoader.whiteFont.setScale(0.08f*ZBGame.FONT_SCALE,0.08f*ZBGame.FONT_SCALE);
+        buttonStyle.font = AssetLoader.whiteFont;
+        buttonStyle.fontColor = Color.WHITE;
+        buttonPlaySingle.setStyle(buttonStyle);
+        buttonPlayMulti.setStyle(buttonStyle);
+        buttonAbout.setStyle(buttonStyle);
+        buttonSettings.setStyle(buttonStyle);
+        buttonPlayOnline.setStyle(buttonStyle);
 
         buttonPlaySingle.setColor(UIColors.MENU_BUTTON);
-        buttonPlaySingle.pad(30).setWidth(screenWidth / 2);
         buttonPlayMulti.setColor(UIColors.MENU_BUTTON);
-        buttonPlayMulti.pad(30).setWidth(screenWidth / 2);
         buttonAbout.setColor(UIColors.MENU_BUTTON);
-        buttonAbout.pad(30).setWidth(screenWidth / 2);
         buttonSettings.setColor(UIColors.MENU_BUTTON);
-        buttonSettings.pad(30).setWidth(screenWidth / 2);
+        buttonPlayOnline.setColor(UIColors.MENU_BUTTON);
 
 
         //The elements are displayed in the order you add them.
@@ -181,12 +195,13 @@ public class MenuScreen extends AbstractGameScreen{
 //        logoImage.setSize(logoImage.getWidth() * scale, logoImage.getHeight() * scale);
 //        table.add(logoImage).size(logoImage.getWidth()*scale,logoImage.getHeight()*scale).row();
 //        table.add(title).padBottom(40).row();
-        int padBottom = 20;
-        int buttonHeight = 100;
+        int padBottom = (int) (3*ZBGame.FONT_SCALE);
+        int buttonHeight = (int) (14*ZBGame.FONT_SCALE);
         int buttonWidth = (int) (screenWidth*0.8f);
 
         table.add(buttonPlaySingle).padTop(screenHeight / 3).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.add(buttonPlayMulti).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+        table.add(buttonPlayOnline).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.add(buttonAbout).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
         if((GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_SINGLE)||
                 (GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_MULTI)){

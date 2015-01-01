@@ -69,10 +69,9 @@ public class AboutScreen extends AbstractGameScreen{
         batcher.setProjectionMatrix(cam.combined);
         cam.update();
 
+        AssetLoader.font.setScale(1.25f, -1.25f);
         skin.add("default", AssetLoader.font);
 
-        title.setColor(Color.WHITE);
-        title.scaleBy(2);
 
         logoSprite = new Sprite(AssetLoader.virollogo);
         float desiredWidth = ZBGame.GAME_WIDTH * 1.4f;
@@ -139,12 +138,16 @@ public class AboutScreen extends AbstractGameScreen{
         style.font = AssetLoader.DINcondensed;
         style.fontColor = Color.WHITE;
         title.setStyle(style);
-        title.setFontScale(2);
-        title.setAlignment(Align.right,Align.right);
-
+        title.setFontScale(ZBGame.FONT_SCALE * 0.3f);
+        title.setAlignment(Align.right, Align.right);
 
 
         //FINAL INSERTION IN TABLE
+        TextButton.TextButtonStyle buttonStyle = buttonBack.getStyle();
+        AssetLoader.DINcondensed.setScale(0.25f*ZBGame.FONT_SCALE,0.25f*ZBGame.FONT_SCALE);
+        buttonStyle.font = AssetLoader.DINcondensed;
+        buttonStyle.fontColor = Color.WHITE;
+        buttonBack.setStyle(buttonStyle);
         int padBottom = 20;
         int buttonHeight = 100;
         int buttonWidth = (int) (screenWidth*0.8f);
@@ -196,7 +199,7 @@ public class AboutScreen extends AbstractGameScreen{
     private void drawReady() {
         //batcher.draw(ready, 136/2-28, midPointY - 50, 57, 14);
         AssetLoader.font.setColor(Color.RED);
-        AssetLoader.font.setScale(0.22f, 0.22f);
+        AssetLoader.font.setScale(0.22f*ZBGame.FONT_SCALE, 0.22f*ZBGame.FONT_SCALE);
         AssetLoader.font.draw(batcher, "TAP TO START",
                 0, 0);
     }
