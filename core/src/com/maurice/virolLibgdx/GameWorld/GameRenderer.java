@@ -427,8 +427,9 @@ public class GameRenderer {
         if((i>= GameWorld.ROWS)||(j>= GameWorld.COLUMNS)){
             //clicked on bottom buttons
             circleController.pauseGame();
+        }else{
+            circleController.move(i,j);
         }
-        circleController.move(i,j);
 
     }
 }

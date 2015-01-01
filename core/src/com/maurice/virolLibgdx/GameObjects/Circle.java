@@ -89,12 +89,12 @@ public class Circle {
         isOpponent = byOpponent;
 
         if(value<MAXVALUE) {
-            AssetLoader.coin.play(0.005f,2,0);//30% volume
+            AssetLoader.coin.play(0.015f,2,0);//30% volume
             value++;
             CircleController.getInstance().addNonBlastAnimation();
         }
         else{
-            AssetLoader.blast.play();
+            AssetLoader.blast.play(1.1f);
             blast(byOpponent);
             CircleController.getInstance().addBlastAnimation();
         }
