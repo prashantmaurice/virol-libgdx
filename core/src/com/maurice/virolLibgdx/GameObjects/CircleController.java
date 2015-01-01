@@ -10,7 +10,6 @@ public class CircleController {
     public static float BLAST_TIME = 0.5f;//1 secs
     public static float NON_BLAST_TIME = 0.35f;//1 secs
     private static CircleController instance;
-    public boolean isCurrMoveOpponent = false;
     public int runningAnimations = 0;
 
     public Circle[][] getCiclesArray() {
@@ -79,15 +78,11 @@ public class CircleController {
                 changePlayState(GameWorld.PlayState.ANIM_OPPONENT);
                 ciclesArray[i][j].onClick(true);
             }
-            proceedNextMove();
         }
     }
 
     public void pauseGame(){
         GameWorld.getInstance().pausePlayerGame();
-    }
-    public void proceedNextMove(){
-        isCurrMoveOpponent = !isCurrMoveOpponent;
     }
     public void addBlastAnimation(){
         runningAnimations++;

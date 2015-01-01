@@ -1,5 +1,6 @@
 package com.maurice.virolLibgdx.GameWorld;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Timer;
 import com.maurice.virolLibgdx.GameObjects.Circle;
@@ -26,12 +27,15 @@ public class GameWorld {
     public static int COLUMNS = 6;
     public boolean LAST_WON_OPPONENT = false;
     public float GAME_SCORE=0;
-    public PlayState currPlayState = PlayState.PLAYER;
-    public PlayMode currPlayMode = PlayMode.SINGLEPLAYER;
+    public static PlayState currPlayState = PlayState.PLAYER;
+    public static PlayMode currPlayMode = PlayMode.SINGLEPLAYER;
     public static OnlineState currOnlineState = OnlineState.DISCONNECTED;
     private Circle[][] resumeCirclesArray;
     NetworkManager networkManager;
     private boolean AIMoveRequested = false;
+
+
+
 
     public enum GameState {MENU, READY, RUNNING, GAMEOVER, HIGHSCORE,ABOUT, CONNECTING,OPPONENT_DISCONNECTED}
     public enum PlayMode {SINGLEPLAYER, ONLINE, PAUSE_ONLINE, PAUSE_SINGLE,PAUSE_MULTI, MULTIPLAYER}
@@ -137,14 +141,24 @@ public class GameWorld {
         networkManager.requestFreeUser();
 
     }
-    public void startOnlineGameMain(){
-        if(currentState != GameState.CONNECTING) return;
-        currentState = GameState.READY;
-        circleController.restart();
-        ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
-                ScreenTransitionSlide.UP, false, Interpolation.sineOut);
-        game.setScreen(new GameScreen(game),transition);
-        currentState = GameState.RUNNING;
+    public void startOnlineGameMain(final boolean firstMoveYou){
+        //You have to use Gdx.app.postRunnable to update the screen from the render thread.
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                if(currentState != GameState.CONNECTING) return;
+                currentState = GameState.READY;
+
+                if(firstMoveYou) GameWorld.currPlayState = PlayState.PLAYER;
+                else GameWorld.currPlayState = PlayState.OPPONENT;
+
+                circleController.restart();
+                ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
+                        ScreenTransitionSlide.UP, false, Interpolation.sineOut);
+                game.setScreen(new GameScreen(game),transition);
+                currentState = GameState.RUNNING;
+            }
+        });
     }
     public void opponentDisconnected(){
         ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
@@ -220,6 +234,15 @@ public class GameWorld {
 	public boolean isRunning() {
 		return currentState == GameState.RUNNING;
 	}
+
+    public void sendMoveServer(int i, int j) {
+        if(GameWorld.getInstance().currPlayState== GameWorld.PlayState.PLAYER){
+            networkManager.setMoveServer(i,j);
+        }
+    }
+    public void onlineGameCommandMove(int i, int j) {
+        circleController.move(i,j);
+    }
 
 
 }

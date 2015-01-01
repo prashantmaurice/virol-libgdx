@@ -421,14 +421,19 @@ public class GameRenderer {
 	}
 
     public void onclick(int screenX, int screenY) {
+
         if(circleController.runningAnimations>0) return;
         int i= screenX/tileDimensions.x;
         int j= screenY/tileDimensions.y;
         if((i>= GameWorld.ROWS)||(j>= GameWorld.COLUMNS)){
             //clicked on bottom buttons
-            circleController.pauseGame();
+            if(GameWorld.currPlayMode != GameWorld.PlayMode.ONLINE) circleController.pauseGame();
         }else{
-            circleController.move(i,j);
+            if(GameWorld.currPlayMode == GameWorld.PlayMode.ONLINE){
+                myWorld.sendMoveServer(i,j);
+            }else{
+                circleController.move(i,j);
+            }
         }
 
     }

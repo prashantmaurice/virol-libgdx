@@ -1,11 +1,9 @@
 package com.maurice.virolLibgdx.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.TweenAccessors.SpriteAccessor;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
@@ -27,7 +25,7 @@ public class MultiWaitingScreen extends AbstractGameScreen{
     public MultiWaitingScreen(ZBGame game) {
         super(game);
         this.game = game;
-        batcher = new SpriteBatch();
+
     }
 
     @Override
@@ -44,6 +42,7 @@ public class MultiWaitingScreen extends AbstractGameScreen{
         sprite.setPosition((width / 2) - (sprite.getWidth() / 2), (height / 2)
                 - (sprite.getHeight() / 2));
 //        setupTween();
+//        batcher = new SpriteBatch();
 
     }
 
@@ -69,14 +68,14 @@ public class MultiWaitingScreen extends AbstractGameScreen{
 //        manager.update(delta);
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batcher.begin();
-        batcher.enableBlending();
-        AssetLoader.whiteFont.setColor(Color.BLACK);
-        AssetLoader.whiteFont.setScale(0.06f, -0.06f);
-        AssetLoader.whiteFont.draw(batcher, ""+GameWorld.currOnlineState,
-                34, Gdx.graphics.getHeight()/2 + 90);
-//        sprite.draw(batcher);
-        batcher.end();
+//        batcher.begin();
+//        batcher.enableBlending();
+//        AssetLoader.whiteFont.setColor(Color.BLACK);
+//        AssetLoader.whiteFont.setScale(0.06f, -0.06f);
+//        AssetLoader.whiteFont.draw(batcher, ""+GameWorld.currOnlineState,
+//                34, Gdx.graphics.getHeight()/2 + 90);
+////        sprite.draw(batcher);
+//        batcher.end();
     }
 
     @Override

@@ -83,23 +83,7 @@ public class NetworkManager {
 
             })
             //PROTOCOL STARTS HERE================================
-            .on("reply free user", new Emitter.Listener() {
-
-                @Override
-                public void call(Object... args) {
-                    GameWorld.currOnlineState = GameWorld.OnlineState.FREE;
-                    JSONObject request = (JSONObject) args[0];
-                    try {
-                        if (request.getBoolean("success")) {
-                            GameWorld.getInstance().startOnlineGameMain();
-                        }
-                        Gdx.app.log(TAG, "received reply free user:" + request.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }).on("waiting for another free user", new Emitter.Listener() {
+            .on("waiting for another free user", new Emitter.Listener() {
 
                 @Override
                 public void call(Object... args) {
@@ -174,7 +158,11 @@ public class NetworkManager {
                         JSONObject move = command.getJSONObject("move");
                         String moveType = move.getString("moveType");
                         if (moveType.equals("startOnlineGame")) {
-                            GameWorld.getInstance().startOnlineGameMain();
+                            GameWorld.getInstance().startOnlineGameMain(userId1==MY_ID);
+                        }else if(moveType.equals("move")){
+                            int x = move.getInt("x");
+                            int y = move.getInt("y");
+                            GameWorld.getInstance().onlineGameCommandMove(x,y);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -225,4 +213,15 @@ public class NetworkManager {
     }
 
 
+    public void setMoveServer(int i, int j) {
+        JSONObject move = new JSONObject();
+        try {
+            move.put("moveType","move");
+            move.put("x",i);
+            move.put("y",j);
+            sendOpponentCommand(move);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
