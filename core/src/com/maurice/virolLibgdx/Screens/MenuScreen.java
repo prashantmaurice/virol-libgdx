@@ -156,7 +156,7 @@ public class MenuScreen extends AbstractGameScreen{
                 System.out.println("Button Settings clicked");
                 ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
                         ScreenTransitionSlide.RIGHT, false, Interpolation.sineOut);
-                game.setScreen(new SettingsScreen2(game),transition);
+                game.setScreen(new SettingsScreen(game),transition);
             }
         });
         buttonResume.addListener(new ClickListener() {

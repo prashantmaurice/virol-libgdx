@@ -6,11 +6,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -18,79 +20,97 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.Transitions.ScreenTransition;
 import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
+import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
+import com.maurice.virolLibgdx.ui.UIColors;
 
 public class SettingsScreen extends AbstractGameScreen {
 
-    Skin skin;
-    Stage stage;
-    SpriteBatch batch;
-    private ShapeRenderer shapeRenderer;
+    SpriteBatch batcher;
     private static final String PREFS_NAME = "user";
     private int gameSpeed;
     private float screenHeight, screenWidth;
     private ZBGame game;
-    private final Slider gyroSensitivity;
+    private ShapeRenderer shapeRenderer;
+    private Stage stage = new Stage();
+    private Table table = new Table();
+    Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+//    private final Slider gyroSensitivity;
+    private TextButton buttonPlaySingle = new TextButton("Single Player", skin);
+    private TextButton buttonPlayMulti = new TextButton("Multi Player", skin);
+    private TextButton buttonPlayOnline = new TextButton("Play Online", skin);
+    private TextButton buttonAbout = new TextButton("About Developer", skin);
+    private TextButton buttonSettings = new TextButton("Settings", skin);
+    private TextButton buttonResume = new TextButton("Resume", skin);
 
 
     public SettingsScreen(ZBGame game){
         super(game);
         this.game=game;
-        batch = new SpriteBatch();
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        System.out.println("setInputProcessor screenWidstageth");
-        shapeRenderer = new ShapeRenderer();
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
-        System.out.println("screen sidth="+screenWidth);
+
+
+        OrthographicCamera cam = new OrthographicCamera(ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
+        cam.setToOrtho(true, ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setProjectionMatrix(cam.combined);
+        batcher = new SpriteBatch();
+        batcher.setProjectionMatrix(cam.combined);
+        cam.update();
+
+        Gdx.input.setInputProcessor(stage);
+        System.out.println("setInputProcessor screenWidstageth");
+        System.out.println("screen width="+screenWidth);
 
 
 //        Skin uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+
 //        AssetLoader.font2.setColor(Color.BLACK);
 //        skin.add("default", AssetLoader.font2);
 
         // Create a table that fills the screen. Everything else will go inside this table.
-        Table table = new Table();
-        table.setFillParent(true);
-        stage.addActor(table);
+//        Table table = new Table();
+//        table.setFillParent(true);
+//        stage.addActor(table);
 
-        Viewport temp  = new Viewport(){};
-        temp.setScreenHeight((int) screenHeight);
-        temp.setScreenWidth((int) screenHeight);
-        stage.setViewport(temp);
+//        Viewport temp  = new Viewport(){};
+//        temp.setScreenHeight((int) screenHeight);
+//        temp.setScreenWidth((int) screenHeight);
+//        stage.setViewport(temp);
 
         //LOAD PREFERENCES
 
 
         //GYRO SENSITIVITY
-        Label nameLabel = new Label("Gyro Sensitivity:", skin);
-        nameLabel.setFontScale(0.7f);
-        gyroSensitivity = new Slider(2, 10, 1, false, skin);
+//        Label nameLabel = new Label("Gyro Sensitivity:", skin);
+//        nameLabel.setFontScale(0.7f);
+//        gyroSensitivity = new Slider(2, 10, 1, false, skin);
 //        gyroSensitivity.setValue(game.GYROSENSITIVITY);
 
-        table.add(nameLabel).padBottom(screenHeight/15);
-        table.row();
-        table.add(gyroSensitivity).width((int)screenWidth*0.8f);
+//        table.add(nameLabel).padBottom(screenHeight/15);
+//        table.row();
+//        table.add(gyroSensitivity).width((int)screenWidth*0.8f);
 
         //SUBMIT BUTTON
-        table.row().padTop(screenHeight/15);
-        final TextButton button = new TextButton("SAVE", skin);
-        button.pad(20);
-        button.setColor(colorFromHex(0xFF419FFFL));
-        table.add(button);
-        button.addListener(new ChangeListener() {
-            public void changed(ChangeEvent event, Actor actor) {
-                updateSettings();
-                System.out.println("slider position: " + gyroSensitivity.getValue());
-
-                getMainGame();
-            }
-        });
+//        table.row().padTop(screenHeight/15);
+//        final TextButton button = new TextButton("SAVE", skin);
+//        button.pad(20);
+//        button.setColor(colorFromHex(0xFF419FFFL));
+//        table.add(button);
+//        button.addListener(new ChangeListener() {
+//            public void changed(ChangeEvent event, Actor actor) {
+//                updateSettings();
+//                System.out.println("slider position: " + gyroSensitivity.getValue());
+//
+//                getMainGame();
+//            }
+//        });
     }
 
     @Override
@@ -106,9 +126,11 @@ public class SettingsScreen extends AbstractGameScreen {
         shapeRenderer.rect(0,screenHeight-4, screenWidth, 4);
         shapeRenderer.end();
 
+        //DRAW TABLE
+//        stage.act();
+//        stage.draw()
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-//        stage.draw();
-//        Table.drawDebug(stage);
+        stage.draw();
 
     }
 
@@ -147,12 +169,6 @@ public class SettingsScreen extends AbstractGameScreen {
 
     @Override
     public void resize (int width, int height) {
-        Viewport temp  = new Viewport(){};
-        temp.setScreenHeight(height);
-        temp.setScreenWidth(width);
-        stage.setViewport(temp);
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
     }
 
     @Override
@@ -164,9 +180,102 @@ public class SettingsScreen extends AbstractGameScreen {
 
     @Override
     public void show() {
-        loadSetings();
-        // TODO Auto-generated method stub
+        stage = new Stage();
 
+        loadSetings();
+        buttonPlaySingle.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button SinglePlayer clicked");
+                GameWorld.getInstance().startSinglePlayerGame();
+            }
+        });
+        buttonPlayMulti.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button MultiPlayer clicked");
+                GameWorld.getInstance().startMultiPlayerGame();
+            }
+        });
+        buttonPlayOnline.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button Online Game clicked");
+                GameWorld.getInstance().startOnlineGameConnection();
+            }
+        });
+        buttonAbout.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button About clicked");
+                ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
+                        ScreenTransitionSlide.LEFT, false, Interpolation.sineOut);
+                game.setScreen(new AboutScreen(game),transition);
+            }
+        });
+        buttonSettings.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button Settings clicked");
+                ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
+                        ScreenTransitionSlide.RIGHT, false, Interpolation.sineOut);
+                game.setScreen(new SettingsScreen(game),transition);
+            }
+        });
+        buttonResume.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Button SinglePlayer clicked");
+                GameWorld.getInstance().resumeGame();
+            }
+        });
+
+        TextButton.TextButtonStyle buttonStyle = buttonPlaySingle.getStyle();
+        AssetLoader.whiteFont.setScale(0.08f*ZBGame.FONT_SCALE,0.08f*ZBGame.FONT_SCALE);
+        buttonStyle.font = AssetLoader.whiteFont;
+        buttonStyle.fontColor = Color.WHITE;
+        buttonPlaySingle.setStyle(buttonStyle);
+        buttonPlayMulti.setStyle(buttonStyle);
+        buttonAbout.setStyle(buttonStyle);
+        buttonSettings.setStyle(buttonStyle);
+        buttonPlayOnline.setStyle(buttonStyle);
+
+        buttonPlaySingle.setColor(UIColors.MENU_BUTTON);
+        buttonPlayMulti.setColor(UIColors.MENU_BUTTON);
+        buttonAbout.setColor(UIColors.MENU_BUTTON);
+        buttonSettings.setColor(UIColors.MENU_BUTTON);
+        buttonPlayOnline.setColor(UIColors.MENU_BUTTON);
+
+
+        //The elements are displayed in the order you add them.
+        //The first appear on top, the last at the bottom.
+
+//        float width = Gdx.graphics.getWidth();
+//        float desiredWidth = width * 1.9f;
+//        float scale = desiredWidth / logoImage.getWidth();
+//        scale = 2.1f;
+//        logoImage.scaleBy(scale,scale);
+//        logoImage.setSize(logoImage.getWidth() * scale, logoImage.getHeight() * scale);
+//        table.add(logoImage).size(logoImage.getWidth()*scale,logoImage.getHeight()*scale).row();
+//        table.add(title).padBottom(40).row();
+        int padBottom = (int) (3*ZBGame.FONT_SCALE);
+        int buttonHeight = (int) (14*ZBGame.FONT_SCALE);
+        int buttonWidth = (int) (screenWidth*0.8f);
+
+        table.add(buttonPlaySingle).padTop(screenHeight / 3).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+        table.add(buttonPlayMulti).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+        table.add(buttonPlayOnline).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+        table.add(buttonAbout).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
+        if((GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_SINGLE)||
+                (GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_MULTI)){
+            table.add(buttonResume).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
+        }
+        table.add(buttonSettings).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+        table.setFillParent(true);
+        stage.addActor(table);
+
+        Gdx.input.setInputProcessor(stage);
+        System.out.println("setInputProcessor stage");
     }
 
     @Override
