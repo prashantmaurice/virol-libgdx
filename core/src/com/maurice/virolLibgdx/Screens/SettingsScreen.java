@@ -14,9 +14,13 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -28,6 +32,11 @@ import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.UIColors;
+
+import java.awt.Checkbox;
+import java.awt.CheckboxMenuItem;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class SettingsScreen extends AbstractGameScreen {
 
@@ -54,6 +63,7 @@ public class SettingsScreen extends AbstractGameScreen {
         this.game=game;
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
+
 
 
         OrthographicCamera cam = new OrthographicCamera(ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
@@ -123,13 +133,11 @@ public class SettingsScreen extends AbstractGameScreen {
         shapeRenderer.setColor(colorFromHex(0xFF222222L));
         shapeRenderer.rect(0,0, screenWidth, screenHeight);
         shapeRenderer.setColor(colorFromHex(0xFF007DFDL));
-        shapeRenderer.rect(0,screenHeight-4, screenWidth, 4);
+        shapeRenderer.rect(0,0, screenWidth, 40);
         shapeRenderer.end();
 
         //DRAW TABLE
-//        stage.act();
-//        stage.draw()
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.act();
         stage.draw();
 
     }
@@ -245,6 +253,7 @@ public class SettingsScreen extends AbstractGameScreen {
         buttonAbout.setColor(UIColors.MENU_BUTTON);
         buttonSettings.setColor(UIColors.MENU_BUTTON);
         buttonPlayOnline.setColor(UIColors.MENU_BUTTON);
+        Label label = new Label("SETTINGS",skin);
 
 
         //The elements are displayed in the order you add them.
@@ -261,17 +270,20 @@ public class SettingsScreen extends AbstractGameScreen {
         int padBottom = (int) (3*ZBGame.FONT_SCALE);
         int buttonHeight = (int) (14*ZBGame.FONT_SCALE);
         int buttonWidth = (int) (screenWidth*0.8f);
-
-        table.add(buttonPlaySingle).padTop(screenHeight / 3).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-        table.add(buttonPlayMulti).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-        table.add(buttonPlayOnline).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-        table.add(buttonAbout).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
-        if((GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_SINGLE)||
-                (GameWorld.getInstance().currPlayMode == GameWorld.PlayMode.PAUSE_MULTI)){
-            table.add(buttonResume).padBottom(padBottom).size(buttonWidth,buttonHeight).row();
-        }
+        Stack stack = new Stack();
+        Image img = new Image();
+        Table chkTable = new Table();
+        CheckBox.CheckBoxStyle style  = new CheckBox.CheckBoxStyle();
+        CheckBox chk1 = new CheckBox("chk1" , skin);
+        chk1.setHeight(200);
+        chk1.setWidth(200);
+        chk1.scaleBy(100);
+        table.add(label).row();
+        table.add(chk1).size(buttonWidth, buttonHeight).row();
+        table.add(buttonPlaySingle).padTop(padBottom).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.add(buttonSettings).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.setFillParent(true);
+        table.setHeight(screenHeight);
         stage.addActor(table);
 
         Gdx.input.setInputProcessor(stage);
