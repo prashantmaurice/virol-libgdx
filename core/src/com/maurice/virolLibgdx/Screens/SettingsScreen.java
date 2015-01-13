@@ -7,6 +7,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -18,13 +19,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.Transitions.ScreenTransition;
 import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
-import com.maurice.virolLibgdx.ZBHelpers.UIObjectGenerater;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.UIColors;
 
@@ -37,10 +37,10 @@ public class SettingsScreen extends AbstractGameScreen {
     private ZBGame game;
     private ShapeRenderer shapeRenderer;
     private Stage stage = new Stage();
-    private Table table = new Table();
+    public int HEADER_HEIGHT = 100;
+    public int TAB_SIZE = 80;
     Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 //    private final Slider gyroSensitivity;
-    private TextButton buttonBackToMenu = new TextButton("back", skin);
 
 
     public SettingsScreen(ZBGame game){
@@ -114,10 +114,10 @@ public class SettingsScreen extends AbstractGameScreen {
 
         //DRAW BACKGROUND
         shapeRenderer.begin(ShapeType.Filled);
-        shapeRenderer.setColor(colorFromHex(0xFF222222L));
+        shapeRenderer.setColor(UIColors.colorFromHex(0xFF333739L));
         shapeRenderer.rect(0,0, screenWidth, screenHeight);
-        shapeRenderer.setColor(colorFromHex(0xFF007DFDL));
-        shapeRenderer.rect(0,0, screenWidth, 40);
+        shapeRenderer.setColor(UIColors.colorFromHex(0xFF414B59L));
+        shapeRenderer.rect(0,0, ZBGame.GAME_WIDTH, HEADER_HEIGHT*(ZBGame.GAME_HEIGHT/screenHeight));
         shapeRenderer.end();
 
         //DRAW TABLE
@@ -175,28 +175,25 @@ public class SettingsScreen extends AbstractGameScreen {
         stage = new Stage();
 
         loadSetings();
-        buttonBackToMenu.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Back button clicked");
-                getMainMenu();
-            }
-        });
+
 
         //SETUP STYLES
-        TextButton.TextButtonStyle tabOptionStyle = new TextButton.TextButtonStyle();
-        tabOptionStyle.down = new TextureRegionDrawable(AssetLoader.blankBG);
-        tabOptionStyle.up = new TextureRegionDrawable(AssetLoader.blankBG);
-        tabOptionStyle.fontColor = Color.BLACK;
-        tabOptionStyle.font = AssetLoader.whiteFont;
+        TextButton.TextButtonStyle tabOptStyleInactive = new TextButton.TextButtonStyle();
+        tabOptStyleInactive.down = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleInactive.up = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleInactive.fontColor = Color.GRAY;
+        tabOptStyleInactive.font = AssetLoader.whiteFont;
+        tabOptStyleInactive.font.scale(0.8f);
+
+        TextButton.TextButtonStyle tabOptStyleActive = new TextButton.TextButtonStyle();
+        tabOptStyleActive.down = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleActive.up = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleActive.fontColor = Color.WHITE;
+        tabOptStyleActive.font = AssetLoader.whiteFont;
+        tabOptStyleActive.font.scale(0.8f);
 
 
-        TextButton.TextButtonStyle menuButtonStyle = buttonBackToMenu.getStyle();
-        AssetLoader.whiteFont.setScale(0.08f*ZBGame.FONT_SCALE,0.08f*ZBGame.FONT_SCALE);
-        menuButtonStyle.font = AssetLoader.whiteFont;
-        menuButtonStyle.fontColor = Color.WHITE;
-        buttonBackToMenu.setStyle(menuButtonStyle);
-        buttonBackToMenu.setColor(UIColors.MENU_BUTTON);
+
 
 
         //The elements are displayed in the order you add them.
@@ -218,37 +215,70 @@ public class SettingsScreen extends AbstractGameScreen {
         gamePrefStack.setHeight(screenHeight);
         gamePrefStack.setWidth(screenWidth);
 
-        Table table1 = new Table();
-        table1.setWidth(screenWidth);
-        Table table2 = new Table();
-        table2.setWidth(screenWidth);
-        Table table3 = new Table();
-        table3.setWidth(screenWidth);
+        //SUPER HEADING
+        Table tableHead = generateTableRow();
+        Label labelHead  = generateTabLabel("Settings");
+        labelHead.setHeight(HEADER_HEIGHT);
+        labelHead.setColor(Color.WHITE);
+        tableHead.add(labelHead);
+        gamePrefStack.addActor(tableHead);
+
+        //SECTION HEADING: GAME SETTINGS
+        Table tableSubHead = new Table();
+        Label labelSubHead  = generateHeaderTabLabel("Game Settings");
+        labelSubHead.setAlignment(Align.left);
+        tableSubHead.left();
+        tableSubHead.add(labelSubHead);
+//        tableSubHead.setWidth(screenWidth);
+        tableSubHead.left();
+        gamePrefStack.addActor(tableSubHead);
+
+        //CONTENT : GAME SETTINGS
+        Table table1 = generateTableRow();
+        Table table2 = generateTableRow();
+        Table table3 = generateTableRow();
+
         gamePrefStack.addActor(table1);
         gamePrefStack.addActor(table2);
         gamePrefStack.addActor(table3);
 
-        Label label1  = UIObjectGenerater.generateLabel("SOUND");
-        TextButton b1 = new TextButton("ON", tabOptionStyle);
-        TextButton b2 = new TextButton("OFF", tabOptionStyle);
-        b2.setColor(UIColors.SETTINGS_TAB_BLUE);
+        Label label1  = generateTabLabel("Sound");
+        TextButton b1 = generateTabButtonInactive("ON");
+        TextButton b2 = generateTabButtonInactive("OFF");
+        makeTabActive(b2);
 
-        Label label2 = UIObjectGenerater.generateLabel("SOUND2");
-        TextButton b3 = new TextButton("ON", tabOptionStyle);
-        TextButton b4 = new TextButton("OFF", tabOptionStyle);
-        TextButton b5 = new TextButton("OFF", tabOptionStyle);
-        b3.setColor(UIColors.SETTINGS_TAB_BLUE);
+        Label label2 = generateTabLabel("Level");
+        TextButton b3 = generateTabButtonInactive("EASY");
+        TextButton b4 = generateTabButtonInactive("MEDIUM");
+        TextButton b5 = generateTabButtonInactive("TOUGH");
+        makeTabActive(b3);
 
-        table1.add(label1).size(screenWidth-200,100);
-        table1.add(b1).size(100,100);
-        table1.add(b2).size(100, 100);
+        table1.add(label1).height(TAB_SIZE);
+        table1.add(b1).height(TAB_SIZE);
+        table1.add(b2).height(TAB_SIZE);
 
-        table2.add(label2).size(screenWidth-300,100);
-        table2.add(b3).size(100,100);
-        table2.add(b4).size(100, 100);
-        table2.add(b5).size(100, 100);
+        table2.setWidth(screenWidth);
+        table2.add(label2).height(TAB_SIZE);
+        table2.add(b3).height(TAB_SIZE);
+        table2.add(b4).height(TAB_SIZE);
+        table2.add(b5).height(TAB_SIZE);
 
+        //BOTTOM BACK BUTTON
+        TextButton buttonBackToMenu = new TextButton("back", skin);
+        TextButton.TextButtonStyle menuButtonStyle = buttonBackToMenu.getStyle();
+        menuButtonStyle.font = new BitmapFont(Gdx.files.internal("data/aharoni_white.fnt"));
+        menuButtonStyle.fontColor = Color.WHITE;
+        menuButtonStyle.font.scale(0.08f);
+        buttonBackToMenu.setStyle(menuButtonStyle);
+        buttonBackToMenu.setColor(UIColors.MENU_BUTTON);
         table3.add(buttonBackToMenu).size(buttonWidth, buttonHeight);
+        buttonBackToMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Back button clicked");
+                getMainMenu();
+            }
+        });
 //        table.setFillParent(true);
 //        table.setHeight(screenHeight);
 //        table.setWidth(screenWidth);
@@ -289,11 +319,48 @@ public class SettingsScreen extends AbstractGameScreen {
         game.setScreen(new MenuScreen(game), transition);
         System.out.println("Menu Screen called");
     }
-    private Color colorFromHex(long hex){
-        float a = (hex & 0xFF000000L) >> 24;
-        float r = (hex & 0xFF0000L) >> 16;
-        float g = (hex & 0xFF00L) >> 8;
-        float b = (hex & 0xFFL);
-        return new Color(r/255f, g/255f, b/255f, a/255f);
+
+
+    //UI ELEM GENERATORS
+    public Label generateHeaderTabLabel(String text){
+        Label label = new Label(text,skin);
+        label.setColor(UIColors.colorFromHex(0xFF3facffL));
+        return label;
+    }
+    public Label generateTabLabel(String text){
+        Label label = new Label(text,skin);
+        label.setColor(UIColors.colorFromHex(0xFFA7A7A7L));
+        return label;
+    }
+
+    public Table generateTableRow(){
+        int pad = 30;
+        Table table1 = new Table();
+        table1.setWidth(screenWidth-(2*pad));
+        table1.pad(pad);
+        return table1;
+    }
+    public TextButton generateTabButtonInactive(String text){
+        TextButton.TextButtonStyle tabOptStyleInactive = new TextButton.TextButtonStyle();
+        tabOptStyleInactive.down = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleInactive.up = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleInactive.fontColor = Color.GRAY;
+        tabOptStyleInactive.font = AssetLoader.whiteFont;
+        tabOptStyleInactive.font.setScale(0.35f);
+        TextButton btn = new TextButton(text, tabOptStyleInactive);
+        btn.pad(10);
+        btn.setColor(UIColors.colorFromHex(0xFF202226L));
+        return btn;
+    }
+    public void makeTabActive(TextButton btn){
+        TextButton.TextButtonStyle tabOptStyleActive = new TextButton.TextButtonStyle();
+        tabOptStyleActive.down = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleActive.up = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptStyleActive.fontColor = Color.WHITE;
+        tabOptStyleActive.font = AssetLoader.whiteFont;
+        tabOptStyleActive.font.setScale(0.35f);
+        btn.setColor(UIColors.SETTINGS_TAB_BLUE);
+        btn.pad(20);
+        btn.setStyle(tabOptStyleActive);
     }
 }
