@@ -228,7 +228,7 @@ public class SettingsScreen extends AbstractGameScreen {
         Label labelSubHead  = generateHeaderTabLabel("Game Settings");
         labelSubHead.setAlignment(Align.left);
         tableSubHead.left();
-        tableSubHead.add(labelSubHead);
+        tableSubHead.add(labelSubHead).pad(30);
 //        tableSubHead.setWidth(screenWidth);
         tableSubHead.left();
         gamePrefStack.addActor(tableSubHead);
@@ -238,6 +238,7 @@ public class SettingsScreen extends AbstractGameScreen {
         Table table2 = generateTableRow();
         Table table3 = generateTableRow();
 
+        gamePrefStack.align(Align.left);
         gamePrefStack.addActor(table1);
         gamePrefStack.addActor(table2);
         gamePrefStack.addActor(table3);
@@ -253,22 +254,27 @@ public class SettingsScreen extends AbstractGameScreen {
         TextButton b5 = generateTabButtonInactive("TOUGH");
         makeTabActive(b3);
 
-        table1.add(label1).height(TAB_SIZE);
-        table1.add(b1).height(TAB_SIZE);
+//        table1.setFillParent(true);
+        label1.setAlignment(Align.bottomLeft);
+//        table1.setBackground(new TextureRegionDrawable(AssetLoader.blankBG));
+//        table1.setColor(Color.CYAN);
+        table1.add(label1).height(TAB_SIZE).width(screenWidth/2);
+        table1.add(b1).height(TAB_SIZE).align(Align.bottomRight);
         table1.add(b2).height(TAB_SIZE);
 
         table2.setWidth(screenWidth);
-        table2.add(label2).height(TAB_SIZE);
+        table2.add(label2).height(TAB_SIZE).width(screenWidth/2);
         table2.add(b3).height(TAB_SIZE);
         table2.add(b4).height(TAB_SIZE);
-        table2.add(b5).height(TAB_SIZE);
+        table2.add(b5).height(TAB_SIZE);//TODO:Chnage this to right aligned
 
         //BOTTOM BACK BUTTON
         TextButton buttonBackToMenu = new TextButton("back", skin);
         TextButton.TextButtonStyle menuButtonStyle = buttonBackToMenu.getStyle();
         menuButtonStyle.font = new BitmapFont(Gdx.files.internal("data/aharoni_white.fnt"));
+//        menuButtonStyle.font = AssetLoader.whiteFont;
         menuButtonStyle.fontColor = Color.WHITE;
-        menuButtonStyle.font.scale(0.08f);
+        menuButtonStyle.font.setScale(0.38f);
         buttonBackToMenu.setStyle(menuButtonStyle);
         buttonBackToMenu.setColor(UIColors.MENU_BUTTON);
         table3.add(buttonBackToMenu).size(buttonWidth, buttonHeight);
@@ -329,6 +335,7 @@ public class SettingsScreen extends AbstractGameScreen {
     }
     public Label generateTabLabel(String text){
         Label label = new Label(text,skin);
+        label.setWidth(screenWidth/2);
         label.setColor(UIColors.colorFromHex(0xFFA7A7A7L));
         return label;
     }
@@ -348,7 +355,7 @@ public class SettingsScreen extends AbstractGameScreen {
         tabOptStyleInactive.font = AssetLoader.whiteFont;
         tabOptStyleInactive.font.setScale(0.35f);
         TextButton btn = new TextButton(text, tabOptStyleInactive);
-        btn.pad(10);
+        btn.pad(10,20,10,20);
         btn.setColor(UIColors.colorFromHex(0xFF202226L));
         return btn;
     }
@@ -360,7 +367,7 @@ public class SettingsScreen extends AbstractGameScreen {
         tabOptStyleActive.font = AssetLoader.whiteFont;
         tabOptStyleActive.font.setScale(0.35f);
         btn.setColor(UIColors.SETTINGS_TAB_BLUE);
-        btn.pad(20);
+        btn.pad(10,20,10,20);
         btn.setStyle(tabOptStyleActive);
     }
 }
