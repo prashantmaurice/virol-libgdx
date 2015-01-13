@@ -7,36 +7,32 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.maurice.virolLibgdx.GameWorld.GameWorld;
 import com.maurice.virolLibgdx.Transitions.ScreenTransition;
 import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
+import com.maurice.virolLibgdx.ZBHelpers.UIObjectGenerater;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.UIColors;
-
-import java.awt.Checkbox;
-import java.awt.CheckboxMenuItem;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class SettingsScreen extends AbstractGameScreen {
 
@@ -56,6 +52,7 @@ public class SettingsScreen extends AbstractGameScreen {
     private TextButton buttonAbout = new TextButton("About Developer", skin);
     private TextButton buttonSettings = new TextButton("Settings", skin);
     private TextButton buttonResume = new TextButton("Resume", skin);
+//    TextButton b2 = new TextButton("OK", skin);
 
 
     public SettingsScreen(ZBGame game){
@@ -64,8 +61,7 @@ public class SettingsScreen extends AbstractGameScreen {
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
 
-
-
+        System.out.println("SKIN:"+skin);
         OrthographicCamera cam = new OrthographicCamera(ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
         cam.setToOrtho(true, ZBGame.GAME_WIDTH, ZBGame.GAME_HEIGHT);
         shapeRenderer = new ShapeRenderer();
@@ -238,22 +234,29 @@ public class SettingsScreen extends AbstractGameScreen {
             }
         });
 
-        TextButton.TextButtonStyle buttonStyle = buttonPlaySingle.getStyle();
+        //SETUP STYLES
+        TextButton.TextButtonStyle tabOptionStyle = new TextButton.TextButtonStyle();
+        tabOptionStyle.down = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptionStyle.up = new TextureRegionDrawable(AssetLoader.blankBG);
+        tabOptionStyle.fontColor = Color.BLACK;
+        tabOptionStyle.font = AssetLoader.whiteFont;
+
+
+        TextButton.TextButtonStyle menuButtonStyle = buttonPlaySingle.getStyle();
         AssetLoader.whiteFont.setScale(0.08f*ZBGame.FONT_SCALE,0.08f*ZBGame.FONT_SCALE);
-        buttonStyle.font = AssetLoader.whiteFont;
-        buttonStyle.fontColor = Color.WHITE;
-        buttonPlaySingle.setStyle(buttonStyle);
-        buttonPlayMulti.setStyle(buttonStyle);
-        buttonAbout.setStyle(buttonStyle);
-        buttonSettings.setStyle(buttonStyle);
-        buttonPlayOnline.setStyle(buttonStyle);
+        menuButtonStyle.font = AssetLoader.whiteFont;
+        menuButtonStyle.fontColor = Color.WHITE;
+        buttonPlaySingle.setStyle(menuButtonStyle);
+        buttonPlayMulti.setStyle(menuButtonStyle);
+        buttonAbout.setStyle(menuButtonStyle);
+        buttonSettings.setStyle(menuButtonStyle);
+        buttonPlayOnline.setStyle(menuButtonStyle);
 
         buttonPlaySingle.setColor(UIColors.MENU_BUTTON);
         buttonPlayMulti.setColor(UIColors.MENU_BUTTON);
         buttonAbout.setColor(UIColors.MENU_BUTTON);
         buttonSettings.setColor(UIColors.MENU_BUTTON);
         buttonPlayOnline.setColor(UIColors.MENU_BUTTON);
-        Label label = new Label("SETTINGS",skin);
 
 
         //The elements are displayed in the order you add them.
@@ -270,21 +273,50 @@ public class SettingsScreen extends AbstractGameScreen {
         int padBottom = (int) (3*ZBGame.FONT_SCALE);
         int buttonHeight = (int) (14*ZBGame.FONT_SCALE);
         int buttonWidth = (int) (screenWidth*0.8f);
-        Stack stack = new Stack();
-        Image img = new Image();
-        Table chkTable = new Table();
-        CheckBox.CheckBoxStyle style  = new CheckBox.CheckBoxStyle();
-        CheckBox chk1 = new CheckBox("chk1" , skin);
-        chk1.setHeight(200);
-        chk1.setWidth(200);
-        chk1.scaleBy(100);
-        table.add(label).row();
-        table.add(chk1).size(buttonWidth, buttonHeight).row();
-        table.add(buttonPlaySingle).padTop(padBottom).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-        table.add(buttonSettings).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+
+        VerticalGroup gamePrefStack = new VerticalGroup();
+        gamePrefStack.setHeight(screenHeight);
+        gamePrefStack.setWidth(screenWidth);
+
+        Table table1 = new Table();
+        table1.setWidth(screenWidth);
+        Table table2 = new Table();
+        table2.setWidth(screenWidth);
+        gamePrefStack.addActor(table1);
+        gamePrefStack.addActor(table2);
+
+        Label label1  = UIObjectGenerater.generateLabel("SOUND");
+        TextButton b1 = new TextButton("ON", tabOptionStyle);
+        TextButton b2 = new TextButton("OFF", tabOptionStyle);
+        b2.setColor(UIColors.SETTINGS_TAB_BLUE);
+
+        Label label2 = UIObjectGenerater.generateLabel("SOUND2");
+        TextButton b3 = new TextButton("ON", tabOptionStyle);
+        TextButton b4 = new TextButton("OFF", tabOptionStyle);
+        TextButton b5 = new TextButton("OFF", tabOptionStyle);
+        b3.setColor(UIColors.SETTINGS_TAB_BLUE);
+
+
+//        gamePrefStack.addActor(b2);
+//        gamePrefStack.addActor(b1).;
+
+        table1.add(label1).size(screenWidth-200,100);
+        table1.add(b1).size(100,100);
+        table1.add(b2).size(100, 100);
+
+        table2.add(label2).size(screenWidth-300,100);
+        table2.add(b3).size(100,100);
+        table2.add(b4).size(100, 100);
+        table2.add(b5).size(100, 100);
+//        table.add(chk1).size(buttonWidth, buttonHeight).row();
+//        table.add(buttonPlaySingle).padTop(padBottom).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+//        table.add(buttonPlaySingle).padTop(padBottom).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
+//        table.add(buttonSettings).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
         table.setFillParent(true);
         table.setHeight(screenHeight);
-        stage.addActor(table);
+        table.setWidth(screenWidth);
+//        stage.addActor(table);
+        stage.addActor(gamePrefStack);
 
         Gdx.input.setInputProcessor(stage);
         System.out.println("setInputProcessor stage");

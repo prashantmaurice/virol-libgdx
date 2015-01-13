@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class AssetLoader {
     private static AssetLoader instance;
@@ -18,6 +19,10 @@ public class AssetLoader {
 	public static Sound dead, blast, coin, fall;
 	public static BitmapFont font, shadow, whiteFont,helvetica, neuropol, futura, DINcondensed;
 	private static Preferences prefs;
+
+    //MENU UI
+    public static Texture blankBGtexture;
+    public static TextureRegion blankBG;
 
     private static int CIRCLES_DIA = 96;
 
@@ -53,6 +58,10 @@ public class AssetLoader {
         blastTexture1 = new Texture(Gdx.files.internal("data/circles/adder.png"));
         blast1 = new TextureRegion(blastTexture1, 0, 0, CIRCLES_DIA, CIRCLES_DIA);
         blast1.flip(false, true);
+
+        //MENU UI
+        blankBGtexture = new Texture(Gdx.files.internal("data/blank.png"));
+        blankBG = new TextureRegion(blankBGtexture, 0, 0, 10 , 10);
 
 //		texture = new Texture(Gdx.files.internal("data/texture3.png"));
 //		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);

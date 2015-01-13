@@ -17,6 +17,9 @@ public class UIColors {
     public static Color MENU_WHITE = colorFromInt(255, 255, 255, 1);
     public static Color MENU_BUTTON = colorFromInt(65, 159, 255, 1);
 
+    //SETTINGS BUTTON
+    public static Color SETTINGS_TAB_BLUE = colorFromInt(103, 158, 232, 1);
+
     //ABOUT ME
     public static Color ABOUT_BG = colorFromInt(27, 60, 100, 1);
 
