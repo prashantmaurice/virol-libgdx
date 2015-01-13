@@ -13,7 +13,7 @@ public class UIObjectGenerater {
 
     //SETTINGS SCREEN GENERATORS
     public static Label generateLabel(String text){
-        Label label = new Label("SOUND",skin);
+        Label label = new Label(text,skin);
         return label;
     }
 }

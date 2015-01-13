@@ -7,20 +7,14 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -46,13 +40,7 @@ public class SettingsScreen extends AbstractGameScreen {
     private Table table = new Table();
     Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 //    private final Slider gyroSensitivity;
-    private TextButton buttonPlaySingle = new TextButton("Single Player", skin);
-    private TextButton buttonPlayMulti = new TextButton("Multi Player", skin);
-    private TextButton buttonPlayOnline = new TextButton("Play Online", skin);
-    private TextButton buttonAbout = new TextButton("About Developer", skin);
-    private TextButton buttonSettings = new TextButton("Settings", skin);
-    private TextButton buttonResume = new TextButton("Resume", skin);
-//    TextButton b2 = new TextButton("OK", skin);
+    private TextButton buttonBackToMenu = new TextButton("back", skin);
 
 
     public SettingsScreen(ZBGame game){
@@ -187,50 +175,11 @@ public class SettingsScreen extends AbstractGameScreen {
         stage = new Stage();
 
         loadSetings();
-        buttonPlaySingle.addListener(new ClickListener() {
+        buttonBackToMenu.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button SinglePlayer clicked");
-                GameWorld.getInstance().startSinglePlayerGame();
-            }
-        });
-        buttonPlayMulti.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button MultiPlayer clicked");
-                GameWorld.getInstance().startMultiPlayerGame();
-            }
-        });
-        buttonPlayOnline.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button Online Game clicked");
-                GameWorld.getInstance().startOnlineGameConnection();
-            }
-        });
-        buttonAbout.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button About clicked");
-                ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
-                        ScreenTransitionSlide.LEFT, false, Interpolation.sineOut);
-                game.setScreen(new AboutScreen(game),transition);
-            }
-        });
-        buttonSettings.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button Settings clicked");
-                ScreenTransition transition = ScreenTransitionSlide.init(0.75f,
-                        ScreenTransitionSlide.RIGHT, false, Interpolation.sineOut);
-                game.setScreen(new SettingsScreen(game),transition);
-            }
-        });
-        buttonResume.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Button SinglePlayer clicked");
-                GameWorld.getInstance().resumeGame();
+                System.out.println("Back button clicked");
+                getMainMenu();
             }
         });
 
@@ -242,21 +191,12 @@ public class SettingsScreen extends AbstractGameScreen {
         tabOptionStyle.font = AssetLoader.whiteFont;
 
 
-        TextButton.TextButtonStyle menuButtonStyle = buttonPlaySingle.getStyle();
+        TextButton.TextButtonStyle menuButtonStyle = buttonBackToMenu.getStyle();
         AssetLoader.whiteFont.setScale(0.08f*ZBGame.FONT_SCALE,0.08f*ZBGame.FONT_SCALE);
         menuButtonStyle.font = AssetLoader.whiteFont;
         menuButtonStyle.fontColor = Color.WHITE;
-        buttonPlaySingle.setStyle(menuButtonStyle);
-        buttonPlayMulti.setStyle(menuButtonStyle);
-        buttonAbout.setStyle(menuButtonStyle);
-        buttonSettings.setStyle(menuButtonStyle);
-        buttonPlayOnline.setStyle(menuButtonStyle);
-
-        buttonPlaySingle.setColor(UIColors.MENU_BUTTON);
-        buttonPlayMulti.setColor(UIColors.MENU_BUTTON);
-        buttonAbout.setColor(UIColors.MENU_BUTTON);
-        buttonSettings.setColor(UIColors.MENU_BUTTON);
-        buttonPlayOnline.setColor(UIColors.MENU_BUTTON);
+        buttonBackToMenu.setStyle(menuButtonStyle);
+        buttonBackToMenu.setColor(UIColors.MENU_BUTTON);
 
 
         //The elements are displayed in the order you add them.
@@ -282,8 +222,11 @@ public class SettingsScreen extends AbstractGameScreen {
         table1.setWidth(screenWidth);
         Table table2 = new Table();
         table2.setWidth(screenWidth);
+        Table table3 = new Table();
+        table3.setWidth(screenWidth);
         gamePrefStack.addActor(table1);
         gamePrefStack.addActor(table2);
+        gamePrefStack.addActor(table3);
 
         Label label1  = UIObjectGenerater.generateLabel("SOUND");
         TextButton b1 = new TextButton("ON", tabOptionStyle);
@@ -296,10 +239,6 @@ public class SettingsScreen extends AbstractGameScreen {
         TextButton b5 = new TextButton("OFF", tabOptionStyle);
         b3.setColor(UIColors.SETTINGS_TAB_BLUE);
 
-
-//        gamePrefStack.addActor(b2);
-//        gamePrefStack.addActor(b1).;
-
         table1.add(label1).size(screenWidth-200,100);
         table1.add(b1).size(100,100);
         table1.add(b2).size(100, 100);
@@ -308,14 +247,11 @@ public class SettingsScreen extends AbstractGameScreen {
         table2.add(b3).size(100,100);
         table2.add(b4).size(100, 100);
         table2.add(b5).size(100, 100);
-//        table.add(chk1).size(buttonWidth, buttonHeight).row();
-//        table.add(buttonPlaySingle).padTop(padBottom).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-//        table.add(buttonPlaySingle).padTop(padBottom).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-//        table.add(buttonSettings).padBottom(padBottom).size(buttonWidth, buttonHeight).row();
-        table.setFillParent(true);
-        table.setHeight(screenHeight);
-        table.setWidth(screenWidth);
-//        stage.addActor(table);
+
+        table3.add(buttonBackToMenu).size(buttonWidth, buttonHeight);
+//        table.setFillParent(true);
+//        table.setHeight(screenHeight);
+//        table.setWidth(screenWidth);
         stage.addActor(gamePrefStack);
 
         Gdx.input.setInputProcessor(stage);
@@ -344,8 +280,7 @@ public class SettingsScreen extends AbstractGameScreen {
         System.out.println("Settings input processor requested");
         return stage;
     }
-    public void getMainGame(){
-        //game.setScreen(new testtwo(game));
+    public void getMainMenu(){
         //ScreenTransition transition = ScreenTransitionFade.init(0.75f);
         //game.setScreen(new testtwo(game), transition);
 
