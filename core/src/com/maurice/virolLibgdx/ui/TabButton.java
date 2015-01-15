@@ -16,6 +16,7 @@ public class TabButton extends TextButton{
     TabButton instance;
     TabButtonMaster master;
     static Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+    public String key;
     public TabButton(String text, Skin skin) {
         super(text, skin);
         instance = this;
@@ -27,6 +28,7 @@ public class TabButton extends TextButton{
     public static TabButton getNewTabButton(String text, TabButtonMaster masterInstance){
         TabButton btn = new TabButton(text,skin);
         btn.setMaster(masterInstance);
+        btn.key = text;
         return btn;
     }
     public void setMaster(TabButtonMaster masterInstance){

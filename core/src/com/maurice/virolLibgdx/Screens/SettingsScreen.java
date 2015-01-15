@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.maurice.virolLibgdx.Transitions.ScreenTransition;
 import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
+import com.maurice.virolLibgdx.ZBHelpers.PrefsManager;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
 import com.maurice.virolLibgdx.ui.TabButton;
 import com.maurice.virolLibgdx.ui.TabButtonMaster;
@@ -33,7 +34,6 @@ import com.maurice.virolLibgdx.ui.UIColors;
 public class SettingsScreen extends AbstractGameScreen {
 
     SpriteBatch batcher;
-    private static final String PREFS_NAME = "user";
     private int gameSpeed;
     private float screenHeight, screenWidth;
     private ZBGame game;
@@ -42,7 +42,7 @@ public class SettingsScreen extends AbstractGameScreen {
     public static int HEADER_HEIGHT = 100;
     public static int TAB_SIZE = 80;
     Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-//    private final Slider gyroSensitivity;
+    PrefsManager prefs = PrefsManager.getInstance();
 
     public SettingsScreen(ZBGame game){
         super(game);
@@ -127,37 +127,6 @@ public class SettingsScreen extends AbstractGameScreen {
 
     }
 
-    public void loadSetings(){
-        Preferences prefs = getPrefs();
-        prefs.putInteger( "high1", 1000 );
-        getPrefs().flush();
-
-        //gameSpeed=prefs.getInteger("speed");
-        //System.out.println("GameSpeed="+gameSpeed);
-        //getPrefs().putInteger( "speed", 23 );
-        //getPrefs().flush();
-    }
-    public void updateSettings(){
-//        Preferences prefs = Gdx.app.getPreferences( game.getPrefsName());
-//
-//        //UPDATE GYRO SETTINGS
-//        prefs.putInteger( game.GYRO_KEY, (int) gyroSensitivity.getValue() );
-//        game.GYROSENSITIVITY=(int) gyroSensitivity.getValue();
-//
-//        prefs.flush();
-//        //game.GYROSENSITIVITY=prefs.getInteger(game.GYRO_KEY);
-//        System.out.println("new Gyrosensitivity="+game.GYROSENSITIVITY);
-//        //getPrefs().putInteger( "speed", 23 );
-//        System.out.println( Gdx.app.getPreferences( game.getPrefsName()));
-//	        /*System.out.println("high2="+getPrefs().getInteger( "high2", 0 ));
-//	   	 if(highScore>yourScore){
-//	   		 highScore=yourScore;
-//	   		 prefs.putInteger( "high1", yourScore );
-//	   	 }*/
-    }
-    protected Preferences getPrefs(){
-        return Gdx.app.getPreferences( PREFS_NAME );
-    }
 
 
     @Override
@@ -175,7 +144,7 @@ public class SettingsScreen extends AbstractGameScreen {
     public void show() {
         stage = new Stage();
 
-        loadSetings();
+//        loadSetings();
 
 
         //SETUP STYLES
@@ -246,18 +215,20 @@ public class SettingsScreen extends AbstractGameScreen {
 
         //SOUND SETTINGS
         Label label1  = generateTabLabel("Sound");
-        TabButtonMaster masterTab1 = new TabButtonMaster();
+        TabButtonMaster masterTab1 = new TabButtonMaster(PrefsManager.Type.SOUND);
         String[] tabs1 = {"ON", "OFF"};
         masterTab1.addTabs(tabs1);
+        masterTab1.activateTab(prefs.SOUND);
         label1.setAlignment(Align.bottomLeft);
         table1.add(label1).height(TAB_SIZE).width(screenWidth / 2);
         masterTab1.addInTable(table1);
 
         //LEVEL SETTINGS
         Label label2 = generateTabLabel("Level");
-        TabButtonMaster masterTab2 = new TabButtonMaster();
+        TabButtonMaster masterTab2 = new TabButtonMaster(PrefsManager.Type.LEVEL);
         String[] tabs2 = {"EASY", "MEDIUM", "HARD"};
         masterTab2.addTabs(tabs2);
+        masterTab2.activateTab(prefs.LEVEL);
         table2.setWidth(screenWidth);
         table2.add(label2).height(TAB_SIZE).width(screenWidth / 2);
         masterTab2.addInTable(table2);//TODO:Chnage this to right aligned
