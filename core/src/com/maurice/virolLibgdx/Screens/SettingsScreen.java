@@ -26,6 +26,8 @@ import com.maurice.virolLibgdx.Transitions.ScreenTransition;
 import com.maurice.virolLibgdx.Transitions.ScreenTransitionSlide;
 import com.maurice.virolLibgdx.ZBHelpers.AssetLoader;
 import com.maurice.virolLibgdx.ZombieBird.ZBGame;
+import com.maurice.virolLibgdx.ui.TabButton;
+import com.maurice.virolLibgdx.ui.TabButtonMaster;
 import com.maurice.virolLibgdx.ui.UIColors;
 
 public class SettingsScreen extends AbstractGameScreen {
@@ -37,11 +39,10 @@ public class SettingsScreen extends AbstractGameScreen {
     private ZBGame game;
     private ShapeRenderer shapeRenderer;
     private Stage stage = new Stage();
-    public int HEADER_HEIGHT = 100;
-    public int TAB_SIZE = 80;
+    public static int HEADER_HEIGHT = 100;
+    public static int TAB_SIZE = 80;
     Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 //    private final Slider gyroSensitivity;
-
 
     public SettingsScreen(ZBGame game){
         super(game);
@@ -127,9 +128,9 @@ public class SettingsScreen extends AbstractGameScreen {
     }
 
     public void loadSetings(){
-        //Preferences prefs = Gdx.app.getPreferences( PREFS_NAME );
-        //prefs.putInteger( "high1", 1000 );
-        //getPrefs().flush();
+        Preferences prefs = getPrefs();
+        prefs.putInteger( "high1", 1000 );
+        getPrefs().flush();
 
         //gameSpeed=prefs.getInteger("speed");
         //System.out.println("GameSpeed="+gameSpeed);
@@ -243,30 +244,23 @@ public class SettingsScreen extends AbstractGameScreen {
         gamePrefStack.addActor(table2);
         gamePrefStack.addActor(table3);
 
+        //SOUND SETTINGS
         Label label1  = generateTabLabel("Sound");
-        TextButton b1 = generateTabButtonInactive("ON");
-        TextButton b2 = generateTabButtonInactive("OFF");
-        makeTabActive(b2);
-
-        Label label2 = generateTabLabel("Level");
-        TextButton b3 = generateTabButtonInactive("EASY");
-        TextButton b4 = generateTabButtonInactive("MEDIUM");
-        TextButton b5 = generateTabButtonInactive("TOUGH");
-        makeTabActive(b3);
-
-//        table1.setFillParent(true);
+        TabButtonMaster masterTab1 = new TabButtonMaster();
+        String[] tabs1 = {"ON", "OFF"};
+        masterTab1.addTabs(tabs1);
         label1.setAlignment(Align.bottomLeft);
-//        table1.setBackground(new TextureRegionDrawable(AssetLoader.blankBG));
-//        table1.setColor(Color.CYAN);
-        table1.add(label1).height(TAB_SIZE).width(screenWidth/2);
-        table1.add(b1).height(TAB_SIZE).align(Align.bottomRight);
-        table1.add(b2).height(TAB_SIZE);
+        table1.add(label1).height(TAB_SIZE).width(screenWidth / 2);
+        masterTab1.addInTable(table1);
 
+        //LEVEL SETTINGS
+        Label label2 = generateTabLabel("Level");
+        TabButtonMaster masterTab2 = new TabButtonMaster();
+        String[] tabs2 = {"EASY", "MEDIUM", "HARD"};
+        masterTab2.addTabs(tabs2);
         table2.setWidth(screenWidth);
-        table2.add(label2).height(TAB_SIZE).width(screenWidth/2);
-        table2.add(b3).height(TAB_SIZE);
-        table2.add(b4).height(TAB_SIZE);
-        table2.add(b5).height(TAB_SIZE);//TODO:Chnage this to right aligned
+        table2.add(label2).height(TAB_SIZE).width(screenWidth / 2);
+        masterTab2.addInTable(table2);//TODO:Chnage this to right aligned
 
         //BOTTOM BACK BUTTON
         TextButton buttonBackToMenu = new TextButton("back", skin);
